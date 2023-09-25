@@ -6,3 +6,5 @@
  */
 
 rootProject.name = "chirper"
+
+include("gateway")
