@@ -7,4 +7,4 @@
 
 rootProject.name = "chirper"
 
-include("gateway")
+include("gateway", "microservice:ms-user")
