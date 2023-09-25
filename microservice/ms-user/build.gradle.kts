@@ -4,7 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.3"
 }
 
-group = "io.marutski"
+group = "io.marutsuki"
 version = "0.0.1-SNAPSHOT"
 
 java {
