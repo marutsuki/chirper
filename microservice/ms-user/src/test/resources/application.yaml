@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: ms-user
+
+server:
+  port: 10001
+
+eureka:
+  client:
+    enabled: false
