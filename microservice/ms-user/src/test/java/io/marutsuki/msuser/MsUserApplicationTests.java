@@ -1,4 +1,4 @@
-package io.marutski.msuser;
+package io.marutsuki.msuser;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

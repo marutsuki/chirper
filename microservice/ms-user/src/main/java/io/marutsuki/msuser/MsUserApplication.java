@@ -1,4 +1,4 @@
-package io.marutski.msuser;
+package io.marutsuki.msuser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
