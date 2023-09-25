@@ -7,4 +7,4 @@
 
 rootProject.name = "chirper"
 
-include("gateway", "microservice:ms-user")
+include("gateway", "eureka", "microservice:ms-user")

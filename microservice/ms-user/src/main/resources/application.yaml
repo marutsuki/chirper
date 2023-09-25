@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: ms-user
+
+server:
+  port: 10001
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
