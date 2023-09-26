@@ -1,10 +1,10 @@
-package io.marutsuki.eureka;
+package io.marutsuki.chirper.service.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaApplicationTests {
+class AuthServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
