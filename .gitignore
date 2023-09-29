@@ -8,4 +8,4 @@ build
 .idea
 
 # Ignore database bootstrap scripts
-dev-database/src/resources/schema
+dev-database/src/main/resources/schema
