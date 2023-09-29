@@ -7,4 +7,4 @@
 
 rootProject.name = "chirper"
 
-include("gateway", "eureka", "service:auth-service", "common")
+include("gateway", "eureka", "service:auth-service", "common","dev-database")
