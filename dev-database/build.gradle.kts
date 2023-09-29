@@ -19,9 +19,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.testcontainers:postgresql:1.17.3")
 	implementation("org.postgresql:postgresql:42.6.0")
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.register<Copy>("copyDatabaseBootstrapScripts") {
+	from(rootProject.projectDir.toString() + "/model")
+	into(projectDir.toString() + "/src/main/resources")
 }
