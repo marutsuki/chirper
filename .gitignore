@@ -6,3 +6,6 @@ build
 
 # Ignore IntelliJ project files
 .idea
+
+# Ignore database bootstrap scripts
+dev-database/src/main/resources/schema

@@ -1,0 +1,12 @@
+spring:
+  h2:
+    console.enabled: true
+
+database:
+  name: chirper-testdb
+  username: dev
+  password: password
+  docker:
+    imageName: "postgres:13.1"
+  server:
+    port: 5432
