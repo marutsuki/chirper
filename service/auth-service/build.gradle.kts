@@ -30,6 +30,7 @@ dependencies {
 	implementation("com.auth0:java-jwt:2.0.1")
 	implementation("io.jsonwebtoken:jjwt-api:0.10.2")
 	implementation(project(":common"))
+	implementation("org.springframework.data:spring-data-jpa:3.1.4")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
