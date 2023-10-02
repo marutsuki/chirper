@@ -1,6 +1,7 @@
 package io.marutsuki.chirper.common.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class User implements UserDetails
 {
     private Integer id;
