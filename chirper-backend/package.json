@@ -7,7 +7,7 @@
     "build": "tsc --build",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "devdb": "npx knex seed:run",
+    "seed": "npx knex seed:run",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db": "sqlite3 chirper.db < schema.sql"
   },
