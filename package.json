@@ -1,0 +1,7 @@
+{
+    "name": "chirper",
+    "version": "1.0.0",
+    "workspaces": ["chirper-backend", "chirper-web"],
+    "author": "marutsuki",
+    "license": "ISC"
+}
