@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "outDir": "dist",
     "target": "ES6",
     "useDefineForClassFields": true,
@@ -16,7 +17,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "paths":{
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"],
 }
