@@ -28,7 +28,6 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/", async (req: Request, res: Response) => {
-    console.log(req.body);
     const { text_content } = req.body;
 
     // TODO: Dummy user id, need to implement authentication
