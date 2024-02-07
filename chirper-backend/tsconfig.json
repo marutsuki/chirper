@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist",
@@ -20,8 +23,9 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths":{
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@db/*": ["db/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "db"],
 }

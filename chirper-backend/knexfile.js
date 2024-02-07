@@ -8,8 +8,10 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: 'chirper.db'
-    }
+      filename: 'chirper.db',
+      flags: ['OPEN_URI', 'OPEN_SHAREDCACHE']
+    },
+    useNullAsDefault: true
   },
 
   staging: {
