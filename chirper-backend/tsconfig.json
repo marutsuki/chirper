@@ -9,6 +9,7 @@
     "useDefineForClassFields": true,
     "module": "CommonJS",
     "skipLibCheck": true,
+    "sourceMap": true,
 
     /* Bundler mode */
     "esModuleInterop": true,
@@ -23,6 +24,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths":{
+      "@knexfile": ["knexfile.ts"],
       "@/*": ["src/*"],
       "@db/*": ["db/*"]
     }

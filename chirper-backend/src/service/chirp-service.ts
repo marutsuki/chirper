@@ -1,4 +1,4 @@
-import knex from "@db/db";
+import knex from "@/config/db";
 import Chirp from "@/model/chirp";
 
 export async function createChirp(chirp: Chirp): Promise<number> {

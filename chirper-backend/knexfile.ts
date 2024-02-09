@@ -1,9 +1,7 @@
 // Update with your config settings.
+import { Knex } from 'knex';
 
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-module.exports = {
+export default {
 
   development: {
     client: 'sqlite3',
@@ -46,4 +44,4 @@ module.exports = {
     }
   }
 
-};
+} as Record<string, Knex.Config>;
