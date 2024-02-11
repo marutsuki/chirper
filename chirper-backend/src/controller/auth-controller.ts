@@ -11,6 +11,7 @@ router.post("/login", async (req: Request, res: Response) => {
     try {
         const user = await getUserByUsername(username);
         if (user !== null && await bcrypt.compare(password, user.password)) {
+            console.info("User logged in: ", user.id);
             const token = jwt.sign({ iss: JWT_ISSUER, sub: user.id, aud: JWT_AUDIENCE }, JWT_SECRET);
             res.status(200).json({ token });
         } else {
@@ -25,7 +26,7 @@ router.post("/login", async (req: Request, res: Response) => {
 router.post("/register", async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
     try {
-        createUser({ username, email, password });
+        await createUser({ username, email, password });
         res.status(201).json({ message: "User registered successfully" });
     } catch (error: unknown) {
         console.error("Error registering user: ", error);

@@ -10,8 +10,9 @@ export async function createUser(user: User): Promise<number | null> {
         if (!id) return null;
         console.info("User created with id: " + id);
         return id;
-    } catch (error) {
-        throw error;
+    } catch (error: unknown) {
+        console.error("An error occurred while creating a user: ", error);
+        throw new Error("An error occurred while creating a user.");
     }
 }
 
@@ -20,8 +21,9 @@ export async function getAllUsers(): Promise<User[]> {
         const users = await knex("users").select("*");
         console.info("Retrieved all users from database.");
         return users;
-    } catch (error) {
-        throw error;
+    } catch (error: unknown) {
+        console.error("An error occurred while retrieving all users: ", error);
+        throw new Error("An error occurred while retrieving all users.");
     }
 }
 
@@ -31,8 +33,9 @@ export async function getUserById(id: number): Promise<User | null> {
         if (!user) return null;
         console.info("Retrieved user with id: " + id);
         return user;
-    } catch (error) {
-        throw error;
+    } catch (error: unknown) {
+        console.error("An error occurred while retrieving a user by id: ", error);
+        throw new Error("An error occurred while retrieving a user by id.");
     }
 }
 
@@ -42,8 +45,9 @@ export async function getUserByUsername(username: string): Promise<User | null> 
         if (!user) return null;
         console.info("Retrieved user with username: " + username);
         return user;
-    } catch (error) {
-        throw error;
+    } catch (error: unknown) {
+        console.error("An error occurred while retrieving a user by username: ", error);
+        throw new Error("An error occurred while retrieving a user by username.");
     }
 }
 
@@ -53,8 +57,9 @@ export async function updateUserById(id: number, user: Partial<User>): Promise<U
         if (!updatedUser) return null;
         console.info("Updated user with id: " + id);
         return updatedUser as User;
-    } catch (error) {
-        throw error;
+    } catch (error: unknown) {
+        console.error("An error occurred while updating a user by id: ", error);
+        throw new Error("An error occurred while updating a user by id.");
     }
 }
 
@@ -64,7 +69,8 @@ export async function deleteUserById(id: number): Promise<boolean> {
         if (deletedUser === 0) return false;
         console.info("Deleted user with id: " + id);
         return true;
-    } catch (error) {
-        throw error;
+    } catch (error: unknown) {
+        console.error("An error occurred while deleting a user by id: ", error);
+        throw new Error("An error occurred while deleting a user by id.");
     }
 }

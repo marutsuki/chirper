@@ -33,6 +33,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
         if (!user) {
             return res.status(401).json({ message: "Unauthorized" });
         }
+        console.debug("Authenticated user: ", user.id);
         req.user = user;
         next();
     })(req, res, next);
