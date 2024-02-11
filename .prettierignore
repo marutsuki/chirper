@@ -1,0 +1,6 @@
+# Ignore artifacts:
+node_modules
+chirper-backend/node_modules
+chirper-web/node_modules
+build
+coverage
