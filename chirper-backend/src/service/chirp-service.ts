@@ -29,18 +29,30 @@ export async function getChirpById(id: number): Promise<Chirp> {
         console.info("Retrieved chirp with id: " + id);
         return chirp;
     } catch (error: unknown) {
-        console.error("An error occurred while retrieving a chirp by id: ", error);
+        console.error(
+            "An error occurred while retrieving a chirp by id: ",
+            error
+        );
         throw new Error("An error occurred while retrieving a chirp by id.");
     }
 }
 
-export async function updateChirpById(id: number, chirp: Partial<Chirp>): Promise<Chirp> {
+export async function updateChirpById(
+    id: number,
+    chirp: Partial<Chirp>
+): Promise<Chirp> {
     try {
-        const [updatedChirp] = await knex("chirps").where({ id }).update(chirp).returning("*");
+        const [updatedChirp] = await knex("chirps")
+            .where({ id })
+            .update(chirp)
+            .returning("*");
         console.info("Updated chirp with id: " + id);
         return updatedChirp as Chirp;
     } catch (error: unknown) {
-        console.error("An error occurred while updating a chirp by id: ", error);
+        console.error(
+            "An error occurred while updating a chirp by id: ",
+            error
+        );
         throw new Error("An error occurred while updating a chirp by id.");
     }
 }
@@ -51,7 +63,10 @@ export async function deleteChirpById(id: number): Promise<boolean> {
         console.info("Deleted chirp with id: " + id);
         return deletedChirp !== 0;
     } catch (error: unknown) {
-        console.error("An error occurred while deleting a chirp by id: ", error);
+        console.error(
+            "An error occurred while deleting a chirp by id: ",
+            error
+        );
         throw new Error("An error occurred while deleting a chirp by id.");
     }
 }

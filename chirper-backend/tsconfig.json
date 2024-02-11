@@ -1,33 +1,33 @@
 {
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  },
-  "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "dist",
-    "target": "ES6",
-    "useDefineForClassFields": true,
-    "module": "CommonJS",
-    "skipLibCheck": true,
-    "sourceMap": true,
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
+    },
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "dist",
+        "target": "ES6",
+        "useDefineForClassFields": true,
+        "module": "CommonJS",
+        "skipLibCheck": true,
+        "sourceMap": true,
 
-    /* Bundler mode */
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+        /* Bundler mode */
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
 
-    "paths":{
-      "@knexfile": ["knexfile.ts"],
-      "@/*": ["src/*"],
-      "@db/*": ["db/*"]
-    }
-  },
-  "include": ["src", "db"],
+        /* Linting */
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+
+        "paths": {
+            "@knexfile": ["knexfile.ts"],
+            "@/*": ["src/*"],
+            "@db/*": ["db/*"]
+        }
+    },
+    "include": ["src", "db"]
 }

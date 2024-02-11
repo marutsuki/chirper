@@ -10,9 +10,12 @@ router.post("/login", async (req: Request, res: Response) => {
     const { username, password } = req.body;
     try {
         const user = await getUserByUsername(username);
-        if (user !== null && await bcrypt.compare(password, user.password)) {
+        if (user !== null && (await bcrypt.compare(password, user.password))) {
             console.info("User logged in: ", user.id);
-            const token = jwt.sign({ iss: JWT_ISSUER, sub: user.id, aud: JWT_AUDIENCE }, JWT_SECRET);
+            const token = jwt.sign(
+                { iss: JWT_ISSUER, sub: user.id, aud: JWT_AUDIENCE },
+                JWT_SECRET
+            );
             res.status(200).json({ token });
         } else {
             res.status(401).json({ message: "Unauthorized" });

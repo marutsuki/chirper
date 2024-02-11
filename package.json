@@ -1,6 +1,7 @@
 {
     "name": "chirper",
     "version": "1.0.0",
+    "type": "module",
     "workspaces": [
         "chirper-backend",
         "chirper-web"

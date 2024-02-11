@@ -34,26 +34,43 @@ export async function getUserById(id: number): Promise<User | null> {
         console.info("Retrieved user with id: " + id);
         return user;
     } catch (error: unknown) {
-        console.error("An error occurred while retrieving a user by id: ", error);
+        console.error(
+            "An error occurred while retrieving a user by id: ",
+            error
+        );
         throw new Error("An error occurred while retrieving a user by id.");
     }
 }
 
-export async function getUserByUsername(username: string): Promise<User | null> {
+export async function getUserByUsername(
+    username: string
+): Promise<User | null> {
     try {
         const user = await knex("users").where({ username }).first();
         if (!user) return null;
         console.info("Retrieved user with username: " + username);
         return user;
     } catch (error: unknown) {
-        console.error("An error occurred while retrieving a user by username: ", error);
-        throw new Error("An error occurred while retrieving a user by username.");
+        console.error(
+            "An error occurred while retrieving a user by username: ",
+            error
+        );
+        throw new Error(
+            "An error occurred while retrieving a user by username."
+        );
     }
 }
 
-export async function updateUserById(id: number, user: Partial<User>): Promise<User | null> {
+export async function updateUserById(
+    id: number,
+    user: Partial<User>
+): Promise<User | null> {
     try {
-        const updatedUser = await knex("users").where({ id }).update(user).returning("*").first();
+        const updatedUser = await knex("users")
+            .where({ id })
+            .update(user)
+            .returning("*")
+            .first();
         if (!updatedUser) return null;
         console.info("Updated user with id: " + id);
         return updatedUser as User;

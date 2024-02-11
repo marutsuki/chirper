@@ -1,5 +1,11 @@
 import User from "@/model/user";
-import { createChirp, deleteChirpById, getAllChirps, getChirpById, updateChirpById } from "@/service/chirp-service";
+import {
+    createChirp,
+    deleteChirpById,
+    getAllChirps,
+    getChirpById,
+    updateChirpById,
+} from "@/service/chirp-service";
 import express from "express";
 import { Request, Response } from "express";
 
@@ -64,7 +70,9 @@ router.put("/:id", async (req: Request, res: Response) => {
     }
 
     try {
-        const updatedChirp = await updateChirpById(parseInt(id), { text_content });
+        const updatedChirp = await updateChirpById(parseInt(id), {
+            text_content,
+        });
         if (updatedChirp) {
             res.json(updatedChirp);
         } else {
@@ -91,7 +99,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
         res.status(403).json({ error: "Forbidden" });
         return;
     }
-    
+
     try {
         const deletedChirp = await deleteChirpById(parseInt(id));
         if (deletedChirp) {

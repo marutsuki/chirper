@@ -1,5 +1,9 @@
 import User from "@/model/user";
-import { followUser, getAllFollowers, unfollowUser } from "@/service/follow-service";
+import {
+    followUser,
+    getAllFollowers,
+    unfollowUser,
+} from "@/service/follow-service";
 import { Request, Response, Router } from "express";
 
 const router = Router();
@@ -57,7 +61,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
             res.status(404).json({ message: "User not found" });
             return;
         }
-        res.json({ message: "Unfollowed user"});
+        res.json({ message: "Unfollowed user" });
     } catch (error: unknown) {
         res.status(500).json({ message: "Internal Server Error" });
     }

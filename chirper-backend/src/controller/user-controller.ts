@@ -1,5 +1,9 @@
 import User from "@/model/user";
-import { getAllUsers, getUserById, updateUserById } from "@/service/user-service";
+import {
+    getAllUsers,
+    getUserById,
+    updateUserById,
+} from "@/service/user-service";
 import { Request, Response, Router } from "express";
 
 const router = Router();
@@ -9,7 +13,7 @@ router.get("/", async (_: Request, res: Response) => {
         const users = await getAllUsers();
         res.json(users);
     } catch (error: unknown) {
-        res.status(500).json({ message: "Internal Server Error" }); 
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
@@ -21,8 +25,7 @@ router.get("/:id", async (req: Request, res: Response) => {
             return;
         }
         res.json(user);
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
