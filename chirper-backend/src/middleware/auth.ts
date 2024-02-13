@@ -3,6 +3,7 @@ import User from "@/model/user";
 import { getUserById } from "@/service/user-service";
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
+import logger from "@/config/logging";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 const jwtOptions = {
@@ -41,7 +42,7 @@ export const authenticate = (
             if (!user) {
                 return res.status(401).json({ message: "Unauthorized" });
             }
-            console.debug("Authenticated user: ", user.id);
+            logger.debug("Authenticated user: ", user.id);
             req.user = user;
             next();
         }
