@@ -12,14 +12,42 @@ export async function createChirp(chirp: Chirp): Promise<number> {
     }
 }
 
-export async function getAllChirps(): Promise<Chirp[]> {
+export async function getAllChirps(limit: number = 100): Promise<Chirp[]> {
     try {
-        const chirps = await knex("chirps").select("*");
-        console.info("Retrieved all chirps from database.");
+        const chirps = await knex("chirps").orderBy("created_at", "desc").limit(limit).select("*");
+        console.info(`Retrieved ${chirps.length} chirps from database.`);
         return chirps;
     } catch (error: unknown) {
-        console.error("An error occurred while retrieving all chirps: ", error);
-        throw new Error("An error occurred while retrieving all chirps.");
+        console.error("An error occurred while retrieving chirps: ", error);
+        throw new Error("An error occurred while retrieving chirps.");
+    }
+}
+
+export async function getChirpsByUserId(userId: number, limit: number = 10): Promise<Chirp[]> {
+    try {
+        const chirps = await knex("chirps").where({ user_id: userId }).orderBy("created_at", "desc").limit(limit).select("*");
+        console.info(`Retrieved ${chirps.length} chirps for user with id: ${userId}`);
+        return chirps;
+    } catch (error: unknown) {
+        console.error(
+            "An error occurred while retrieving chirps by user id: ",
+            error
+        );
+        throw new Error("An error occurred while retrieving chirps by user id.");
+    }
+}
+
+export async function getChirpsByUserIds(userIds: number[], limit: number = 100): Promise<Chirp[]> {
+    try {
+        const chirps = await knex("chirps").whereIn("user_id", userIds).orderBy("created_at", "desc").limit(limit).select("*");
+        console.info(`Retrieved ${chirps.length} chirps for user ids: userIds`);
+        return chirps;
+    } catch (error: unknown) {
+        console.error(
+            "An error occurred while retrieving chirps by user ids: ",
+            error
+        );
+        throw new Error("An error occurred while retrieving chirps by user ids.");
     }
 }
 

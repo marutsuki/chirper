@@ -1,6 +1,7 @@
 import User from "@/model/user";
 import {
     followUser,
+    getAllFollowees,
     getAllFollowers,
     unfollowUser,
 } from "@/service/follow-service";
@@ -19,6 +20,23 @@ router.get("/", async (req: Request, res: Response) => {
 
     try {
         const followers = await getAllFollowers(uid);
+        res.json(followers);
+    } catch (error: unknown) {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+router.get("/followees", async (req: Request, res: Response) => {
+    const uid = (req.user as User).id;
+
+    if (uid === undefined) {
+        // User is not authenticated, so do not action the request
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+
+    try {
+        const followers = await getAllFollowees(uid);
         res.json(followers);
     } catch (error: unknown) {
         res.status(500).json({ message: "Internal Server Error" });

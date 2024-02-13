@@ -11,8 +11,7 @@ export async function followUser(
     try {
         const follow = await knex("follows")
             .insert({ follower_id: followerId, followee_id: followeeId })
-            .returning("*")
-            .first();
+            .returning("*");
         console.info(
             "User with id " +
                 followerId +
@@ -20,10 +19,10 @@ export async function followUser(
                 followeeId
         );
 
-        if (!follow) {
+        if (!follow || follow.length === 0) {
             return null;
         }
-        return follow;
+        return follow[0];
     } catch (error: unknown) {
         console.error("An error occurred while following a user: ", error);
         throw new Error("An error occurred while following a user.");

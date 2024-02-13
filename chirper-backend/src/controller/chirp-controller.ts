@@ -4,6 +4,7 @@ import {
     deleteChirpById,
     getAllChirps,
     getChirpById,
+    getChirpsByUserId,
     updateChirpById,
 } from "@/service/chirp-service";
 import express from "express";
@@ -29,6 +30,16 @@ router.get("/:id", async (req: Request, res: Response) => {
         } else {
             res.status(404).json({ error: "Chirp not found" });
         }
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+router.get("/user/:id", async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const chirps = await getChirpsByUserId(parseInt(id));
+        res.json(chirps);
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
