@@ -2,7 +2,7 @@ import { createUser, getUserByUsername } from "@/service/user-service";
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { JWT_AUDIENCE, JWT_ISSUER, JWT_SECRET } from "@/config/auth-config";
+import { JWT_AUDIENCE, JWT_ISSUER, JWT_SECRET, JWT_SIGN_OPT } from "@/config/auth-config";
 
 const router = express.Router();
 
@@ -14,7 +14,8 @@ router.post("/login", async (req: Request, res: Response) => {
             console.info("User logged in: ", user.id);
             const token = jwt.sign(
                 { iss: JWT_ISSUER, sub: user.id, aud: JWT_AUDIENCE },
-                JWT_SECRET
+                JWT_SECRET,
+                JWT_SIGN_OPT
             );
             res.status(200).json({ token });
         } else {
