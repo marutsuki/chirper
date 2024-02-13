@@ -1,13 +1,14 @@
 import knex from "@/config/db";
 import Chirp from "@/model/chirp";
+import logger from "@/config/logging";
 
 export async function createChirp(chirp: Chirp): Promise<number> {
     try {
         const [id] = await knex("chirps").insert(chirp);
-        console.info("Chirp created with id: " + id);
+        logger.info("Chirp created with id: " + id);
         return id;
     } catch (error: unknown) {
-        console.error("An error occurred while creating a chirp: ", error);
+        logger.error("An error occurred while creating a chirp: ", error);
         throw new Error("An error occurred while creating a chirp.");
     }
 }
@@ -15,10 +16,10 @@ export async function createChirp(chirp: Chirp): Promise<number> {
 export async function getAllChirps(limit: number = 100): Promise<Chirp[]> {
     try {
         const chirps = await knex("chirps").orderBy("created_at", "desc").limit(limit).select("*");
-        console.info(`Retrieved ${chirps.length} chirps from database.`);
+        logger.info(`Retrieved ${chirps.length} chirps from database.`);
         return chirps;
     } catch (error: unknown) {
-        console.error("An error occurred while retrieving chirps: ", error);
+        logger.error("An error occurred while retrieving chirps: ", error);
         throw new Error("An error occurred while retrieving chirps.");
     }
 }
@@ -26,10 +27,10 @@ export async function getAllChirps(limit: number = 100): Promise<Chirp[]> {
 export async function getChirpsByUserId(userId: number, limit: number = 10): Promise<Chirp[]> {
     try {
         const chirps = await knex("chirps").where({ user_id: userId }).orderBy("created_at", "desc").limit(limit).select("*");
-        console.info(`Retrieved ${chirps.length} chirps for user with id: ${userId}`);
+        logger.info(`Retrieved ${chirps.length} chirps for user with id: ${userId}`);
         return chirps;
     } catch (error: unknown) {
-        console.error(
+        logger.error(
             "An error occurred while retrieving chirps by user id: ",
             error
         );
@@ -40,10 +41,10 @@ export async function getChirpsByUserId(userId: number, limit: number = 10): Pro
 export async function getChirpsByUserIds(userIds: number[], limit: number = 100): Promise<Chirp[]> {
     try {
         const chirps = await knex("chirps").whereIn("user_id", userIds).orderBy("created_at", "desc").limit(limit).select("*");
-        console.info(`Retrieved ${chirps.length} chirps for user ids: userIds`);
+        logger.info(`Retrieved ${chirps.length} chirps for user ids: userIds`);
         return chirps;
     } catch (error: unknown) {
-        console.error(
+        logger.error(
             "An error occurred while retrieving chirps by user ids: ",
             error
         );
@@ -54,10 +55,10 @@ export async function getChirpsByUserIds(userIds: number[], limit: number = 100)
 export async function getChirpById(id: number): Promise<Chirp> {
     try {
         const chirp = await knex("chirps").where({ id }).first();
-        console.info("Retrieved chirp with id: " + id);
+        logger.info("Retrieved chirp with id: " + id);
         return chirp;
     } catch (error: unknown) {
-        console.error(
+        logger.error(
             "An error occurred while retrieving a chirp by id: ",
             error
         );
@@ -74,10 +75,10 @@ export async function updateChirpById(
             .where({ id })
             .update(chirp)
             .returning("*");
-        console.info("Updated chirp with id: " + id);
+        logger.info("Updated chirp with id: " + id);
         return updatedChirp as Chirp;
     } catch (error: unknown) {
-        console.error(
+        logger.error(
             "An error occurred while updating a chirp by id: ",
             error
         );
@@ -88,10 +89,10 @@ export async function updateChirpById(
 export async function deleteChirpById(id: number): Promise<boolean> {
     try {
         const deletedChirp = await knex("chirps").where({ id }).del();
-        console.info("Deleted chirp with id: " + id);
+        logger.info("Deleted chirp with id: " + id);
         return deletedChirp !== 0;
     } catch (error: unknown) {
-        console.error(
+        logger.error(
             "An error occurred while deleting a chirp by id: ",
             error
         );
