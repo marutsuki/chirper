@@ -8,6 +8,7 @@ import { JWT_AUDIENCE, JWT_SECRET, JWT_SIGN_OPT } from "@/config/auth-config";
 const router = express.Router();
 
 router.post("/login", async (req: Request, res: Response) => {
+    console.log(req.body);
     const { username, password } = req.body;
     try {
         const user = await getUserByUsername(username);
@@ -16,7 +17,7 @@ router.post("/login", async (req: Request, res: Response) => {
             const token = jwt.sign(
                 { sub: user.id, aud: JWT_AUDIENCE },
                 JWT_SECRET,
-                JWT_SIGN_OPT,
+                JWT_SIGN_OPT
             );
             res.status(200).json({ token });
         } else {

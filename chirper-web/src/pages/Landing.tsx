@@ -10,7 +10,7 @@ const Landing: FC = () => {
                 <h2 className="text-xl">Start chirpin</h2>
             </div>
             <div>
-                <Button className="text-xl">
+                <Button className="text-2xl">
                     <Link to="/login">Login</Link>
                 </Button>
             </div>
