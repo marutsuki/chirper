@@ -13,19 +13,14 @@ export async function followUser(
         const follow = await knex("social.follows")
             .insert({ follower_id: followerId, followee_id: followeeId })
             .returning("*");
-        logger.info(
-            "User with id " +
-                followerId +
-                " followed user with id " +
-                followeeId
-        );
+        logger.info({ followerId, followeeId }, "User follow");
 
         if (!follow || follow.length === 0) {
             return null;
         }
         return follow[0];
     } catch (error: unknown) {
-        logger.error("An error occurred while following a user: ", error);
+        logger.error(error, "An error occurred while following a user");
         throw new Error("An error occurred while following a user.");
     }
 }
@@ -42,15 +37,10 @@ export async function unfollowUser(
         if (deletedFollow === 0) {
             return false;
         }
-        logger.info(
-            "User with id " +
-                followerId +
-                " unfollowed user with id " +
-                followeeId
-        );
+        logger.info({ followerId, followeeId }, "User unfollow");
         return true;
     } catch (error: unknown) {
-        logger.error("An error occurred while unfollowing a user: ", error);
+        logger.error(error, "An error occurred while unfollowing a user: ");
         throw new Error("An error occurred while unfollowing a user.");
     }
 }
@@ -60,12 +50,12 @@ export async function getAllFollowers(userId: number): Promise<Follow[]> {
         const followers = await knex("social.follows")
             .where({ followee_id: userId })
             .select("*");
-        logger.info("Retrieved all followers for user with id: " + userId);
+        logger.info({ userId }, "Retrieved all followers for user with id");
         return followers;
     } catch (error: unknown) {
         logger.error(
-            "An error occurred while retrieving all followers for a user: ",
-            error
+            error,
+            "An error occurred while retrieving all followers for a user: "
         );
         throw new Error(
             "An error occurred while retrieving all followers for a user."
@@ -78,12 +68,12 @@ export async function getAllFollowees(userId: number): Promise<Follow[]> {
         const followees = await knex("social.follows")
             .where({ follower_id: userId })
             .select("*");
-        logger.info("Retrieved all followees for user with id: " + userId);
+        logger.info({ userId }, "Retrieved all followees for user with id");
         return followees;
     } catch (error: unknown) {
         logger.error(
-            "An error occurred while retrieving all followees for a user: ",
-            error
+            error,
+            "An error occurred while retrieving all followees for a user: "
         );
         throw new Error(
             "An error occurred while retrieving all followees for a user."

@@ -24,5 +24,5 @@ app.use("/api/timeline", timelineRouter);
 logger.info("Registered API ednpoints");
 
 app.listen(port, () => {
-    logger.info(`Server is running on port ${port}`);
+    logger.info({ port }, "Server is running");
 });

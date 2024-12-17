@@ -8,12 +8,11 @@ import { JWT_AUDIENCE, JWT_SECRET, JWT_SIGN_OPT } from "@/config/auth-config";
 const router = express.Router();
 
 router.post("/login", async (req: Request, res: Response) => {
-    console.log(req.body);
     const { username, password } = req.body;
     try {
         const user = await getUserByUsername(username);
         if (user !== null && (await bcrypt.compare(password, user.password))) {
-            logger.info("User logged in: ", user.id);
+            logger.info({ userId: user.id }, "User logged in");
             const token = jwt.sign(
                 { sub: user.id, aud: JWT_AUDIENCE },
                 JWT_SECRET,
@@ -24,7 +23,7 @@ router.post("/login", async (req: Request, res: Response) => {
             res.status(401).json({ message: "Unauthorized" });
         }
     } catch (error: unknown) {
-        logger.error("An error occurred while logging in: ", error);
+        logger.error(error, "An error occurred while logging in");
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
@@ -35,7 +34,7 @@ router.post("/register", async (req: Request, res: Response) => {
         await createUser({ username, email, password });
         res.status(201).json({ message: "User registered successfully" });
     } catch (error: unknown) {
-        logger.error("Error registering user: ", error);
+        logger.error(error, "Error registering user: ");
         res.status(500).json({ message: "Internal Server Error" });
     }
 });

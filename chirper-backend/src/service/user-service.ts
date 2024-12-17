@@ -9,10 +9,13 @@ export async function createUser(user: User): Promise<number | null> {
         user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
         const id = await knex("iam.users").insert(user).returning("id");
         if (!id) return null;
-        logger.info("User created with id: " + id);
+        logger.info(
+            { id, username: user.username, email: user.email },
+            "User created"
+        );
         return id[0];
     } catch (error: unknown) {
-        logger.error("An error occurred while creating a user: ", error);
+        logger.error(error, "An error occurred while creating a user");
         throw new Error("An error occurred while creating a user.");
     }
 }
@@ -20,10 +23,10 @@ export async function createUser(user: User): Promise<number | null> {
 export async function getAllUsers(): Promise<User[]> {
     try {
         const users = await knex("iam.users").select("*");
-        logger.info("Retrieved all users from database.");
+        logger.debug("Retrieved all users from database.");
         return users;
     } catch (error: unknown) {
-        logger.error("An error occurred while retrieving all users: ", error);
+        logger.error(error, "An error occurred while retrieving all users");
         throw new Error("An error occurred while retrieving all users.");
     }
 }
@@ -32,13 +35,10 @@ export async function getUserById(id: number): Promise<User | null> {
     try {
         const user = await knex("iam.users").where({ id });
         if (!user) return null;
-        logger.info("Retrieved user with id: " + id);
+        logger.debug({ id }, "Retrieved user");
         return user[0];
     } catch (error: unknown) {
-        logger.error(
-            "An error occurred while retrieving a user by id: ",
-            error
-        );
+        logger.error(error, "An error occurred while retrieving a user by id");
         throw new Error("An error occurred while retrieving a user by id.");
     }
 }
@@ -49,12 +49,12 @@ export async function getUserByUsername(
     try {
         const user = await knex("iam.users").where({ username });
         if (!user) return null;
-        logger.info("Retrieved user with username: " + username);
+        logger.debug({ username }, "Retrieved user");
         return user[0];
     } catch (error: unknown) {
         logger.error(
-            "An error occurred while retrieving a user by username: ",
-            error
+            error,
+            "An error occurred while retrieving a user by username"
         );
         throw new Error(
             "An error occurred while retrieving a user by username."
@@ -72,10 +72,10 @@ export async function updateUserById(
             .update(user)
             .returning("*");
         if (!updatedUser) return null;
-        logger.info("Updated user with id: " + id);
+        logger.info({ id }, "User updated");
         return updatedUser[0] as User;
     } catch (error: unknown) {
-        logger.error("An error occurred while updating a user by id: ", error);
+        logger.error(error, "An error occurred while updating a user by id");
         throw new Error("An error occurred while updating a user by id.");
     }
 }
@@ -87,7 +87,7 @@ export async function deleteUserById(id: number): Promise<boolean> {
         logger.info("Deleted user with id: " + id);
         return true;
     } catch (error: unknown) {
-        logger.error("An error occurred while deleting a user by id: ", error);
+        logger.error(error, "An error occurred while deleting a user by id");
         throw new Error("An error occurred while deleting a user by id.");
     }
 }
