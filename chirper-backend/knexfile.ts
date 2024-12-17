@@ -1,14 +1,25 @@
 // Update with your config settings.
 import { Knex } from "knex";
+import dotenv from "dotenv";
+import path from "path";
 
+dotenv.config({ path: path.join(__dirname, "../.env")})
+console.log(process.env)
 export default {
     development: {
-        client: "sqlite3",
+        client: "postgresql",
         connection: {
-            filename: "chirper.db",
-            flags: ["OPEN_URI", "OPEN_SHAREDCACHE"],
+            database: process.env.POSTGRESDB_DATABASE,
+            user: process.env.POSTGRESDB_USER,
+            password: process.env.POSTGRESDB_PASSWORD,
         },
-        useNullAsDefault: true,
+        pool: {
+            min: 2,
+            max: 10,
+        },
+        migrations: {
+            tableName: "knex_migrations",
+        },
     },
 
     staging: {
