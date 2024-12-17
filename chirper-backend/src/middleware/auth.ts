@@ -35,7 +35,7 @@ export const authenticate = (
     passport.authenticate(
         "jwt",
         { session: false },
-        (err: Error, user: User) => {
+        (err: Error, user: Omit<User, 'id'> & { id: string }) => {
             if (err) {
                 return next(err);
             }
@@ -43,7 +43,10 @@ export const authenticate = (
                 return res.status(401).json({ message: "Unauthorized" });
             }
             logger.debug("Authenticated user: ", user.id);
-            req.user = user;
+            req.user = {
+                ...user,
+                id: parseInt(user.id),
+            };
             next();
         }
     )(req, res, next);

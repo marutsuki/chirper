@@ -4,7 +4,7 @@ import logger from "@/config/logging";
 
 export async function createChirp(chirp: Chirp): Promise<number> {
     try {
-        const [id] = await knex("chirps").insert(chirp);
+        const [id] = await knex("chirp.chirps").insert(chirp).returning("id");
         logger.info("Chirp created with id: " + id);
         return id;
     } catch (error: unknown) {
@@ -15,7 +15,7 @@ export async function createChirp(chirp: Chirp): Promise<number> {
 
 export async function getAllChirps(limit: number = 100): Promise<Chirp[]> {
     try {
-        const chirps = await knex("chirps").orderBy("created_at", "desc").limit(limit).select("*");
+        const chirps = await knex("chirp.chirps").orderBy("created_at", "desc").limit(limit).select("*");
         logger.info(`Retrieved ${chirps.length} chirps from database.`);
         return chirps;
     } catch (error: unknown) {
@@ -26,7 +26,7 @@ export async function getAllChirps(limit: number = 100): Promise<Chirp[]> {
 
 export async function getChirpsByUserId(userId: number, limit: number = 10): Promise<Chirp[]> {
     try {
-        const chirps = await knex("chirps").where({ user_id: userId }).orderBy("created_at", "desc").limit(limit).select("*");
+        const chirps = await knex("chirp.chirps").where({ user_id: userId }).orderBy("created_at", "desc").limit(limit).select("*");
         logger.info(`Retrieved ${chirps.length} chirps for user id: ${userId}`);
         return chirps;
     } catch (error: unknown) {
@@ -40,7 +40,7 @@ export async function getChirpsByUserId(userId: number, limit: number = 10): Pro
 
 export async function getChirpsByUserIds(userIds: number[], limit: number = 100): Promise<Chirp[]> {
     try {
-        const chirps = await knex("chirps").whereIn("user_id", userIds).orderBy("created_at", "desc").limit(limit).select("*");
+        const chirps = await knex("chirp.chirps").whereIn("user_id", userIds).orderBy("created_at", "desc").limit(limit).select("*");
         logger.info(`Retrieved ${chirps.length} chirps for user ids: ${userIds}`);
         return chirps;
     } catch (error: unknown) {
@@ -54,7 +54,7 @@ export async function getChirpsByUserIds(userIds: number[], limit: number = 100)
 
 export async function getChirpById(id: number): Promise<Chirp> {
     try {
-        const chirp = await knex("chirps").where({ id }).first();
+        const chirp = await knex("chirp.chirps").where({ id }).first();
         logger.info("Retrieved chirp with id: " + id);
         return chirp;
     } catch (error: unknown) {
@@ -71,7 +71,7 @@ export async function updateChirpById(
     chirp: Partial<Chirp>
 ): Promise<Chirp> {
     try {
-        const [updatedChirp] = await knex("chirps")
+        const [updatedChirp] = await knex("chirp.chirps")
             .where({ id })
             .update(chirp)
             .returning("*");
@@ -88,7 +88,7 @@ export async function updateChirpById(
 
 export async function deleteChirpById(id: number): Promise<boolean> {
     try {
-        const deletedChirp = await knex("chirps").where({ id }).del();
+        const deletedChirp = await knex("chirp.chirps").where({ id }).del();
         logger.info("Deleted chirp with id: " + id);
         return deletedChirp !== 0;
     } catch (error: unknown) {

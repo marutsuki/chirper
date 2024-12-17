@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
                 .inTable('iam.users')
                 .notNullable();
             table.string('text_content', 255).notNullable();
-            table.dateTime('created_at').notNullable();
+            table.dateTime('created_at').defaultTo(knex.fn.now()).notNullable();
     });
 }
 
