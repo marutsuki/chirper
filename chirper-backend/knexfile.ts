@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 
 dotenv.config({ path: path.join(__dirname, "../.env")})
-console.log(process.env)
+
 export default {
     development: {
         client: "postgresql",
