@@ -1,16 +1,17 @@
 import "./App.css";
-import { MantineProvider } from "@mantine/core";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import Landing from "./pages/Landing";
 
 function App() {
-    return <MantineProvider>
+    return (
         <BrowserRouter>
             <Routes>
-                <Route path="/"><Home/></Route>
+                <Route path="/" element={<Landing />} />
+                <Route path="/home" element={<Home />} />
             </Routes>
         </BrowserRouter>
-    </MantineProvider>
+    );
 }
 
 export default App;
