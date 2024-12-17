@@ -9,9 +9,12 @@ const Landing: FC = () => {
                 <h1 className="text-7xl">chirper.</h1>
                 <h2 className="text-xl">Start chirpin</h2>
             </div>
-            <div>
+            <div className="flex flex-col gap-4">
                 <Button className="text-2xl">
                     <Link to="/login">Login</Link>
+                </Button>
+                <Button className="text-2xl">
+                    <Link to="/register">Register</Link>
                 </Button>
             </div>
         </section>
