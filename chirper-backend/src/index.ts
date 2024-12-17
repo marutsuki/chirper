@@ -18,7 +18,7 @@ app.use("/auth", authRouter);
 
 app.use("/api/chirps", chirpRouter);
 app.use("/api/users", userRouter);
-app.use("/api/follow", followRouter);
+app.use("/api/follows", followRouter);
 app.use("/api/timeline", timelineRouter);
 
 logger.info("Registered API ednpoints");

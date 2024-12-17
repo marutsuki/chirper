@@ -10,7 +10,7 @@ export async function followUser(
         throw new Error("User cannot follow themselves.");
     }
     try {
-        const follow = await knex("follows")
+        const follow = await knex("social.follows")
             .insert({ follower_id: followerId, followee_id: followeeId })
             .returning("*");
         logger.info(
@@ -35,7 +35,7 @@ export async function unfollowUser(
     followeeId: number
 ): Promise<boolean> {
     try {
-        const deletedFollow = await knex("follows")
+        const deletedFollow = await knex("social.follows")
             .where({ follower_id: followerId, followee_id: followeeId })
             .del();
 
@@ -57,7 +57,7 @@ export async function unfollowUser(
 
 export async function getAllFollowers(userId: number): Promise<Follow[]> {
     try {
-        const followers = await knex("follows")
+        const followers = await knex("social.follows")
             .where({ followee_id: userId })
             .select("*");
         logger.info("Retrieved all followers for user with id: " + userId);
@@ -75,7 +75,7 @@ export async function getAllFollowers(userId: number): Promise<Follow[]> {
 
 export async function getAllFollowees(userId: number): Promise<Follow[]> {
     try {
-        const followees = await knex("follows")
+        const followees = await knex("social.follows")
             .where({ follower_id: userId })
             .select("*");
         logger.info("Retrieved all followees for user with id: " + userId);
