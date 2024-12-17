@@ -1,9 +1,38 @@
 import knex from "@/config/db";
 import User from "@/model/user";
-import bcrypt from "bcrypt";
-import logger from "@/config/logging";
-import { SALT_ROUNDS } from "@/config/auth-config";
+import jwt from "jsonwebtoken";
 
+import bcrypt from "bcrypt";
+
+import logger from "@/config/logging";
+import {
+    JWT_AUDIENCE,
+    JWT_SECRET,
+    JWT_SIGN_OPT,
+    SALT_ROUNDS,
+} from "@/config/auth-config";
+
+export async function loginUser(
+    username: string,
+    password: string
+): Promise<string | null> {
+    try {
+        const user = await getUserByUsername(username);
+        if (user !== null && (await bcrypt.compare(password, user.password))) {
+            logger.info({ userId: user.id }, "User logged in");
+            return jwt.sign(
+                { sub: user.id, aud: JWT_AUDIENCE },
+                JWT_SECRET,
+                JWT_SIGN_OPT
+            );
+        }
+    } catch (error: unknown) {
+        logger.error(error, "An error occurred attempting to log user in");
+        throw new Error("An error occurred attempting to log user in.");
+    }
+
+    return null;
+}
 export async function createUser(user: User): Promise<number | null> {
     try {
         user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
