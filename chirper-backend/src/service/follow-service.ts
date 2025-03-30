@@ -6,9 +6,12 @@ export async function followUser(
     followerId: number,
     followeeId: number
 ): Promise<Follow | null> {
+    // Prevent users from following themselves
     if (followerId === followeeId) {
-        throw new Error("User cannot follow themselves.");
+        logger.warn({ followerId }, "User attempted to follow themselves");
+        return null;
     }
+    
     try {
         const follow = await knex("social.follows")
             .insert({ follower_id: followerId, followee_id: followeeId })

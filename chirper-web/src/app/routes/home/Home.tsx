@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from "react";
 import ChirpList from "@/components/chirp/ChirpList";
 import CreateChirp from "@/components/chirp/CreateChirp";
 import { ChirpData } from "@/components/chirp/Chirp";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
 
@@ -11,7 +10,7 @@ const Home: FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const { isAuthenticated, getAuthHeaders, logout } = useAuth();
+    const { getAuthHeaders } = useAuth();
 
     const fetchTimeline = async () => {
         setIsLoading(true);
@@ -42,27 +41,13 @@ const Home: FC = () => {
     };
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate("/login");
-            return;
-        }
-
         fetchTimeline();
-    }, [isAuthenticated, navigate]);
-
-    const handleLogout = () => {
-        logout();
-    };
+    }, []);
 
     return (
-        <div className="container mx-auto max-w-2xl p-4">
-            <header className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">chirper</h1>
-                <Button variant="outline" onClick={handleLogout}>
-                    Logout
-                </Button>
-            </header>
-
+        <div className="max-w-2xl mx-auto">
+            <h1 className="text-2xl font-bold mb-6">Home</h1>
+            
             <CreateChirp onChirpCreated={fetchTimeline} />
 
             <ChirpList
