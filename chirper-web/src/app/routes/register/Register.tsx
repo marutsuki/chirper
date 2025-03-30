@@ -1,7 +1,9 @@
 import { FC, useState, useTransition } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
-import Form from "@/common/Form";
+import Form from "@/components/form/Form";
+import { IoChevronBackSharp } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
 
 type RegisterRequest = {
     username: string;
@@ -44,8 +46,15 @@ const Register: FC = () => {
         });
     };
     return (
-        <section className="h-full flex flex-col justify-center items-center gap-2">
+        <section className="h-full flex flex-col justify-center items-center gap-2 w-96 place-self-center">
+            <div className="w-full">
+                <Button variant="ghost" onClick={() => navigate("/")}>
+                    <IoChevronBackSharp />
+                    Back
+                </Button>
+            </div>
             <RegisterForm
+                title="Register an account"
                 schema={formSchema}
                 opts={{
                     username: {
@@ -60,8 +69,16 @@ const Register: FC = () => {
                 }}
                 error={error}
                 isPending={isPending}
+                submitLabel="Register"
                 onSubmit={onSubmit}
             />
+
+            <div className="flex justify-center w-full items-center">
+                Have an account already?
+                <Button asChild variant="link">
+                    <Link to="/login">Login</Link>
+                </Button>
+            </div>
         </section>
     );
 };

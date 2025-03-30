@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import ChirpList from "@/components/chirp/ChirpList";
 import CreateChirp from "@/components/chirp/CreateChirp";
 import { ChirpData } from "@/components/chirp/Chirp";
@@ -12,7 +12,7 @@ const Home: FC = () => {
     const navigate = useNavigate();
     const { getAuthHeaders } = useAuth();
 
-    const fetchTimeline = async () => {
+    const fetchTimeline = useCallback(async () => {
         setIsLoading(true);
         setError(null);
 
@@ -38,16 +38,16 @@ const Home: FC = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [getAuthHeaders, navigate]);
 
     useEffect(() => {
         fetchTimeline();
-    }, []);
+    }, [fetchTimeline]);
 
     return (
         <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Home</h1>
-            
+            <h1 className="text-2xl font-bold mb-6 font-heading">Home</h1>
+
             <CreateChirp onChirpCreated={fetchTimeline} />
 
             <ChirpList

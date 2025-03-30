@@ -1,8 +1,10 @@
-import Form from "@/common/Form";
+import Form from "@/components/form/Form";
 import { FC, useState, useTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useAuth } from "@/app/AuthContext";
+import { IoChevronBackSharp } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
 
 const shape = {
     username: z.string().min(2, {
@@ -50,8 +52,15 @@ const Login: FC = () => {
         });
     };
     return (
-        <section className="h-full flex flex-col justify-center items-center gap-2">
+        <section className="h-full flex flex-col justify-center items-center gap-2 w-96 place-self-center">
+            <div className="w-full">
+                <Button variant="ghost" onClick={() => navigate("/")}>
+                    <IoChevronBackSharp />
+                    Back
+                </Button>
+            </div>
             <LoginForm
+                title="Login"
                 schema={formSchema}
                 opts={{
                     username: {
@@ -63,6 +72,7 @@ const Login: FC = () => {
                 }}
                 error={error}
                 isPending={isPending}
+                submitLabel="Login"
                 onSubmit={onSubmit}
             />
         </section>

@@ -2,6 +2,7 @@ import { FC, ReactNode } from "react";
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -9,10 +10,14 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { FaPowerOff } from "react-icons/fa";
 import { MdPerson } from "react-icons/md";
 import { TiHome } from "react-icons/ti";
 import { BsChatRightQuoteFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/app/AuthContext";
 
 type SidebarItem = {
     label: string;
@@ -33,11 +38,19 @@ const items: SidebarItem[] = [
 ];
 
 const AppSidebar: FC = () => {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+
+    const doLogout = () => {
+        logout();
+        navigate("/");
+    };
+
     return (
         <Sidebar className="p-2">
             <SidebarHeader className="p-4 flex flex-row">
                 <BsChatRightQuoteFill size={24} />
-                <span>Chirper</span>
+                <span className="font-heading font-bold">Chirper</span>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
@@ -58,6 +71,13 @@ const AppSidebar: FC = () => {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <SidebarSeparator />
+                <SidebarMenuButton onClick={doLogout}>
+                    <FaPowerOff />
+                    Logout
+                </SidebarMenuButton>
+            </SidebarFooter>
         </Sidebar>
     );
 };
