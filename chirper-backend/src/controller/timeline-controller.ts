@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import { getAllFollowees } from "@/service/follow-service";
 import User from "@/model/user";
-import { getChirpsByUserIds } from "@/service/chirp-service";
+import { getChirpsByUserIds, PaginationParams } from "@/service/chirp-service";
 
 const router = Router();
 
@@ -15,14 +15,23 @@ router.get("/", async (req: Request, res: Response) => {
     }
 
     try {
+        // Parse pagination parameters
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+        const cursor = req.query.cursor as string | undefined;
+        
+        const pagination: PaginationParams = {
+            limit,
+            cursor
+        };
+
         const followedAccounts = await getAllFollowees(uid);
 
-        const chirps = await getChirpsByUserIds([
-            uid,
-            ...followedAccounts.map((account) => account.followee_id),
-        ]);
+        const result = await getChirpsByUserIds(
+            [uid, ...followedAccounts.map((account) => account.followee_id)],
+            pagination
+        );
 
-        res.json(chirps);
+        res.json(result);
     } catch (error) {
         console.error("Error retrieving timeline:", error);
         res.status(500).json({ error: "Internal Server Error" });
