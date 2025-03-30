@@ -2,16 +2,23 @@ import User from "@/model/user";
 import {
     getAllUsers,
     getUserById,
+    searchUsers,
     updateUserById,
 } from "@/service/user-service";
 import { Request, Response, Router } from "express";
 
 const router = Router();
 
-router.get("/", async (_: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response) => {
     try {
-        const users = await getAllUsers();
-        res.json(users);
+        const query = req.query.q as string;
+        if (query) {
+            const users = await searchUsers(query);
+            res.json(users);
+        } else {
+            const users = await getAllUsers();
+            res.json(users);
+        }
     } catch (error: unknown) {
         res.status(500).json({ message: "Internal Server Error" });
     }

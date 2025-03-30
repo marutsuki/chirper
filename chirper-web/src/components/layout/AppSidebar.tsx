@@ -1,4 +1,5 @@
 import { FC, ReactNode } from "react";
+import UserSearch from "@/components/user/UserSearch";
 import {
     Sidebar,
     SidebarContent,
@@ -52,6 +53,9 @@ const AppSidebar: FC = () => {
                 <BsChatRightQuoteFill size={24} />
                 <span className="font-heading font-bold">Chirper</span>
             </SidebarHeader>
+            <div className="px-4 mb-4">
+                <UserSearch />
+            </div>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>

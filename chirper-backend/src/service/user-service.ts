@@ -60,6 +60,20 @@ export async function getAllUsers(): Promise<User[]> {
     }
 }
 
+export async function searchUsers(query: string): Promise<User[]> {
+    try {
+        const users = await knex("iam.users")
+            .select("*")
+            .where("username", "ilike", `%${query}%`)
+            .orWhere("email", "ilike", `%${query}%`);
+        logger.debug({ query }, "Searched for users");
+        return users;
+    } catch (error: unknown) {
+        logger.error(error, "An error occurred while searching for users");
+        throw new Error("An error occurred while searching for users.");
+    }
+}
+
 export async function getUserById(id: number): Promise<User | null> {
     try {
         const user = await knex("iam.users").where({ id });
