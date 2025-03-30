@@ -3,7 +3,7 @@ import { Knex } from "knex";
 import dotenv from "dotenv";
 import path from "path";
 
-dotenv.config({ path: path.join(__dirname, "../.env")})
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 export default {
     development: {
@@ -12,6 +12,7 @@ export default {
             database: process.env.POSTGRESDB_DATABASE,
             user: process.env.POSTGRESDB_USER,
             password: process.env.POSTGRESDB_PASSWORD,
+            port: process.env.POSTGRESDB_DOCKER_PORT,
         },
         pool: {
             min: 2,

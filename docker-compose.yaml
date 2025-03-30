@@ -1,19 +1,19 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  chirper-postgres:
-    image: postgres
-    container_name: chirper_db
-    restart: unless-stopped
-    env_file: ./.env
-    environment:
-      - POSTGRES_USER=$POSTGRES_USER
-      - POSTGRES_PASSWORD=$POSTGRESDB_PASSWORD
-      - POSTGRES_DB=$POSTGRESDB_DATABASE
-    ports:
-      - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
-    volumes:
-      - db:/var/lib/postgres
+    chirper-postgres:
+        image: postgres
+        container_name: chirper_db
+        restart: unless-stopped
+        env_file: ./.env
+        environment:
+            - POSTGRES_USER=$POSTGRES_USER
+            - POSTGRES_PASSWORD=$POSTGRESDB_PASSWORD
+            - POSTGRES_DB=$POSTGRESDB_DATABASE
+        ports:
+            - $POSTGRESDB_DOCKER_PORT:$POSTGRESDB_LOCAL_PORT
+        volumes:
+            - db:/var/lib/postgres
 
-volumes: 
-  db:
+volumes:
+    db:

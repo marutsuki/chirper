@@ -21,7 +21,7 @@ export async function loginUser(
         if (user !== null && (await bcrypt.compare(password, user.password))) {
             logger.info({ userId: user.id }, "User logged in");
             return jwt.sign(
-                { sub: user.id, aud: JWT_AUDIENCE },
+                { sub: user.id, user: username, aud: JWT_AUDIENCE },
                 JWT_SECRET,
                 JWT_SIGN_OPT
             );
