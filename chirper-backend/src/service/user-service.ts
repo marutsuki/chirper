@@ -139,3 +139,33 @@ export async function deleteUserById(id: number): Promise<boolean> {
         throw new Error("An error occurred while deleting a user by id.");
     }
 }
+
+export async function updateUserPassword(
+    id: number,
+    currentPassword: string,
+    newPassword: string
+): Promise<boolean> {
+    try {
+        // Get the user to verify the current password
+        const user = await getUserById(id);
+        if (!user) return false;
+
+        // Verify the current password
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) return false;
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+        // Update the password
+        await knex("iam.users")
+            .where({ id })
+            .update({ password: hashedPassword });
+
+        logger.info({ id }, "User password updated");
+        return true;
+    } catch (error: unknown) {
+        logger.error(error, "An error occurred while updating a user password");
+        throw new Error("An error occurred while updating a user password.");
+    }
+}
