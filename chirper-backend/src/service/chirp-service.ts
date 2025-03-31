@@ -41,27 +41,34 @@ export async function getChirpsByUserId(
 
         // Apply cursor-based pagination if cursor is provided
         if (cursor) {
-            const [timestamp, id] = cursor.split(":");
-            query = query.where(function() {
-                this.where("created_at", "<", timestamp)
-                    .orWhere(function() {
-                        this.where("created_at", "=", timestamp)
-                            .andWhere("id", "<", id);
-                    });
+            const [timestamp, id] = cursor.split("@");
+            // Parse the timestamp from ISO format
+            const parsedTimestamp = new Date(timestamp).toISOString();
+            
+            query = query.where(function () {
+                this.where("created_at", "<", parsedTimestamp).orWhere(function () {
+                    this.where("created_at", "=", parsedTimestamp).andWhere(
+                        "id",
+                        "<",
+                        id
+                    );
+                });
             });
         }
 
         const chirps = await query.select("*");
-        
+
         // Check if there are more results
         const hasMore = chirps.length > limit;
         const results = hasMore ? chirps.slice(0, limit) : chirps;
-        
+
         // Create the next cursor
         let nextCursor = null;
         if (hasMore && results.length > 0) {
             const lastChirp = results[results.length - 1];
-            nextCursor = `${lastChirp.created_at}:${lastChirp.id}`;
+            // Format the timestamp in ISO format to ensure consistency
+            const timestamp = new Date(lastChirp.created_at).toISOString();
+            nextCursor = `${timestamp}@${lastChirp.id}`;
         }
 
         logger.info(
@@ -72,7 +79,7 @@ export async function getChirpsByUserId(
         return {
             data: results,
             nextCursor,
-            hasMore
+            hasMore,
         };
     } catch (error: unknown) {
         logger.error(
@@ -87,7 +94,7 @@ export async function getChirpsByUserId(
 
 export interface PaginationParams {
     limit?: number;
-    cursor?: string; // Format: "timestamp:id"
+    cursor?: string; // Format: "timestamp@id"
 }
 
 export interface PaginatedResult<T> {
@@ -110,27 +117,34 @@ export async function getChirpsByUserIds(
 
         // Apply cursor-based pagination if cursor is provided
         if (cursor) {
-            const [timestamp, id] = cursor.split(":");
-            query = query.where(function() {
-                this.where("created_at", "<", timestamp)
-                    .orWhere(function() {
-                        this.where("created_at", "=", timestamp)
-                            .andWhere("id", "<", id);
-                    });
+            const [timestamp, id] = cursor.split("@");
+            // Parse the timestamp from ISO format
+            const parsedTimestamp = new Date(timestamp).toISOString();
+            
+            query = query.where(function () {
+                this.where("created_at", "<", parsedTimestamp).orWhere(function () {
+                    this.where("created_at", "=", parsedTimestamp).andWhere(
+                        "id",
+                        "<",
+                        id
+                    );
+                });
             });
         }
 
         const chirps = await query.select("*");
-        
+
         // Check if there are more results
         const hasMore = chirps.length > limit;
         const results = hasMore ? chirps.slice(0, limit) : chirps;
-        
+
         // Create the next cursor
         let nextCursor = null;
         if (hasMore && results.length > 0) {
             const lastChirp = results[results.length - 1];
-            nextCursor = `${lastChirp.created_at}:${lastChirp.id}`;
+            // Format the timestamp in ISO format to ensure consistency
+            const timestamp = new Date(lastChirp.created_at).toISOString();
+            nextCursor = `${timestamp}@${lastChirp.id}`;
         }
 
         logger.info(
@@ -141,7 +155,7 @@ export async function getChirpsByUserIds(
         return {
             data: results,
             nextCursor,
-            hasMore
+            hasMore,
         };
     } catch (error: unknown) {
         logger.error(

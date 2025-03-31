@@ -120,7 +120,7 @@ const Profile: FC = () => {
         setIsLoadingMore(true);
         try {
             const response = await fetch(
-                `http://localhost:3000/api/chirps/user/${userId}?cursor=${nextCursor}&limit=10`,
+                `http://localhost:3000/api/chirps/user/${userId}?cursor=${encodeURIComponent(nextCursor)}&limit=10`,
                 {
                     headers: getAuthHeaders(),
                 }
