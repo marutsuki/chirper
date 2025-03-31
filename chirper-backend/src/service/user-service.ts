@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import logger from "@/config/logging";
+import { createDefaultProfile } from "./profile-service";
 import {
     JWT_AUDIENCE,
     JWT_SECRET,
@@ -38,9 +39,13 @@ export async function createUser(user: User): Promise<number | null> {
         user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
         const id = await knex("iam.users").insert(user).returning("id");
         if (!id) return null;
+        
+        // Create a default profile for the new user
+        await createDefaultProfile(id[0]);
+        
         logger.info(
             { id, username: user.username, email: user.email },
-            "User created"
+            "User created with default profile"
         );
         return id[0];
     } catch (error: unknown) {
