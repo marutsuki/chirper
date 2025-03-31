@@ -4,6 +4,7 @@ import authRouter from "@/controller/auth-controller";
 import userRouter from "@/controller/user-controller";
 import followRouter from "@/controller/follow-controller";
 import timelineRouter from "@/controller/timeline-controller";
+import profileRouter from "@/controller/profile-controller";
 import logger from "@/config/logging";
 import { authenticate } from "@/middleware/auth";
 
@@ -20,6 +21,7 @@ app.use("/api/chirps", chirpRouter);
 app.use("/api/users", userRouter);
 app.use("/api/follows", followRouter);
 app.use("/api/timeline", timelineRouter);
+app.use("/api/profiles", profileRouter);
 
 logger.info("Registered API ednpoints");
 

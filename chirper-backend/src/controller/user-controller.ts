@@ -4,6 +4,7 @@ import {
     getUserById,
     searchUsers,
     updateUserById,
+    updateUserPassword,
 } from "@/service/user-service";
 import { Request, Response, Router } from "express";
 
@@ -45,6 +46,37 @@ router.put("/:id", async (req: Request, res: Response) => {
         }
         const user = await updateUserById(parseInt(req.params.id), req.body);
         res.json(user);
+    } catch (error: unknown) {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+// Update user password
+router.put("/:id/password", async (req: Request, res: Response) => {
+    try {
+        const userId = parseInt(req.params.id);
+        
+        // Check if the authenticated user is the owner of the account
+        if ((req.user as User).id !== userId) {
+            res.status(403).json({ message: "Forbidden" });
+            return;
+        }
+        
+        const { currentPassword, newPassword } = req.body;
+        
+        if (!currentPassword || !newPassword) {
+            res.status(400).json({ message: "Current password and new password are required" });
+            return;
+        }
+        
+        const success = await updateUserPassword(userId, currentPassword, newPassword);
+        
+        if (!success) {
+            res.status(400).json({ message: "Current password is incorrect" });
+            return;
+        }
+        
+        res.json({ message: "Password updated successfully" });
     } catch (error: unknown) {
         res.status(500).json({ message: "Internal Server Error" });
     }

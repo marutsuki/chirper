@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import logger from "@/config/logging";
+import { createDefaultProfile } from "./profile-service";
 import {
     JWT_AUDIENCE,
     JWT_SECRET,
@@ -38,9 +39,13 @@ export async function createUser(user: User): Promise<number | null> {
         user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
         const id = await knex("iam.users").insert(user).returning("id");
         if (!id) return null;
+        
+        // Create a default profile for the new user
+        await createDefaultProfile(id[0]);
+        
         logger.info(
             { id, username: user.username, email: user.email },
-            "User created"
+            "User created with default profile"
         );
         return id[0];
     } catch (error: unknown) {
@@ -132,5 +137,35 @@ export async function deleteUserById(id: number): Promise<boolean> {
     } catch (error: unknown) {
         logger.error(error, "An error occurred while deleting a user by id");
         throw new Error("An error occurred while deleting a user by id.");
+    }
+}
+
+export async function updateUserPassword(
+    id: number,
+    currentPassword: string,
+    newPassword: string
+): Promise<boolean> {
+    try {
+        // Get the user to verify the current password
+        const user = await getUserById(id);
+        if (!user) return false;
+
+        // Verify the current password
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) return false;
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+        // Update the password
+        await knex("iam.users")
+            .where({ id })
+            .update({ password: hashedPassword });
+
+        logger.info({ id }, "User password updated");
+        return true;
+    } catch (error: unknown) {
+        logger.error(error, "An error occurred while updating a user password");
+        throw new Error("An error occurred while updating a user password.");
     }
 }

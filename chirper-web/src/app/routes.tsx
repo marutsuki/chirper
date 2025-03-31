@@ -5,6 +5,7 @@ import Profile from "@/app/routes/profile/[userId]/Profile";
 import Landing from "@/app/routes/(root)/Landing";
 import Login from "@/app/routes/login/Login";
 import Register from "@/app/routes/register/Register";
+import Settings from "@/app/routes/settings/Settings";
 import AppRoot from "@/app/routes/(root)/AppRoot";
 import ProfileRedirect from "./routes/profile/[userId]/ProfileRedirect";
 
@@ -41,6 +42,10 @@ export const routes: RouteObject[] = [
                     {
                         path: "profile/:userId",
                         element: <Profile />,
+                    },
+                    {
+                        path: "settings",
+                        element: <Settings />,
                     },
                 ],
             },

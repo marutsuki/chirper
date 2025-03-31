@@ -4,6 +4,8 @@ import { useAuth } from "@/app/AuthContext";
 import { ChirpData } from "@/components/chirp/Chirp";
 import ChirpList from "@/components/chirp/ChirpList";
 import { Button } from "@/components/ui/button";
+import ProfileForm, { ProfileData } from "@/components/profile/ProfileForm";
+import { FaGlobe, FaLocationArrow } from "react-icons/fa";
 
 interface UserProfile {
     id: number;
@@ -23,6 +25,7 @@ const Profile: FC = () => {
     const { getAuthHeaders, isAuthenticated, currentUserId } = useAuth();
 
     const [user, setUser] = useState<UserProfile | null>(null);
+    const [profile, setProfile] = useState<ProfileData | null>(null);
     const [chirps, setChirps] = useState<ChirpData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -31,6 +34,7 @@ const Profile: FC = () => {
     const [isOwnProfile, setIsOwnProfile] = useState(false);
     const [nextCursor, setNextCursor] = useState<string | null>(null);
     const [hasMore, setHasMore] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -71,6 +75,19 @@ const Profile: FC = () => {
                 // Check if this is the current user's profile
                 if (currentUserId) {
                     setIsOwnProfile(currentUserId === userData.id);
+                }
+
+                // Fetch profile data
+                const profileResponse = await fetch(
+                    `http://localhost:3000/api/profiles/user/${userId}`,
+                    {
+                        headers: getAuthHeaders(),
+                    }
+                );
+
+                if (profileResponse.ok) {
+                    const profileData = await profileResponse.json();
+                    setProfile(profileData);
                 }
 
                 // Fetch user's chirps
@@ -161,6 +178,36 @@ const Profile: FC = () => {
         }
     };
 
+    const handleEditProfile = () => {
+        setIsEditing(true);
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+    };
+
+    const handleSaveProfile = async (updatedProfile: ProfileData) => {
+        const response = await fetch(
+            `http://localhost:3000/api/profiles/user/${userId}`,
+            {
+                method: "PUT",
+                headers: {
+                    ...getAuthHeaders(),
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedProfile),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to update profile");
+        }
+
+        const savedProfile = await response.json();
+        setProfile(savedProfile);
+        setIsEditing(false);
+    };
+
     if (isLoading) {
         return <div className="text-center p-8">Loading profile...</div>;
     }
@@ -177,25 +224,78 @@ const Profile: FC = () => {
         <div className="max-w-2xl mx-auto">
             <div className="mb-8 p-6 border border-gray-200 rounded-lg">
                 <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold">{user.username}</h1>
-                    {!isOwnProfile && (
-                        <Button
-                            variant={isFollowing ? "outline" : "default"}
-                            onClick={handleFollowToggle}
-                        >
-                            {isFollowing ? "Unfollow" : "Follow"}
-                        </Button>
-                    )}
-                    {isOwnProfile && (
-                        <div className="text-sm text-gray-500 italic">
-                            This is your profile
+                    <div>
+                        <h1 className="text-2xl font-bold">
+                            {profile?.display_name || user.username}
+                        </h1>
+                        {profile?.gender_pronouns && (
+                            <small>({profile.gender_pronouns})</small>
+                        )}
+                    </div>
+
+                    <div className="flex space-x-2">
+                        {!isOwnProfile && (
+                            <Button
+                                variant={isFollowing ? "outline" : "default"}
+                                onClick={handleFollowToggle}
+                            >
+                                {isFollowing ? "Unfollow" : "Follow"}
+                            </Button>
+                        )}
+                        {isOwnProfile && !isEditing && (
+                            <Button onClick={handleEditProfile}>
+                                Edit Profile
+                            </Button>
+                        )}
+                    </div>
+                </div>
+
+                {isEditing && profile ? (
+                    <ProfileForm
+                        profile={profile}
+                        onSave={handleSaveProfile}
+                        onCancel={handleCancelEdit}
+                    />
+                ) : (
+                    <div className="space-y-4">
+                        <div className="text-gray-600">
+                            <p>Username: {user.username}</p>
+                            <p>Email: {user.email}</p>
+
+                            <div className="flex justify-between">
+                                {profile?.website && (
+                                    <p className="flex items-center gap-2">
+                                        <FaGlobe />
+                                        Website:{" "}
+                                        <a
+                                            href={profile.website}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:underline"
+                                        >
+                                            {profile.website}
+                                        </a>
+                                    </p>
+                                )}
+                                {profile?.location && (
+                                    <p className="flex items-center gap-2">
+                                        <FaLocationArrow />
+                                        Location: {profile.location}
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
-                <div className="text-gray-600">
-                    <p>Email: {user.email}</p>
-                    <p className="mt-2">User ID: {user.id}</p>
-                </div>
+
+                        {profile?.bio && (
+                            <div className="mt-4">
+                                <h3 className="text-lg font-medium mb-2">
+                                    Bio
+                                </h3>
+                                <p className="text-gray-700">{profile.bio}</p>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <h2 className="text-xl font-semibold mb-4">Chirps</h2>

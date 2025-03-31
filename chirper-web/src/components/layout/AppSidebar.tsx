@@ -13,7 +13,7 @@ import {
     SidebarMenuItem,
     SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { FaPowerOff } from "react-icons/fa";
+import { FaPowerOff, FaCog } from "react-icons/fa";
 import { MdPerson } from "react-icons/md";
 import { TiHome } from "react-icons/ti";
 import { BsChatRightQuoteFill } from "react-icons/bs";
@@ -35,6 +35,11 @@ const items: SidebarItem[] = [
         label: "Profile",
         url: "/profile",
         icon: <MdPerson />,
+    },
+    {
+        label: "Settings",
+        url: "/settings",
+        icon: <FaCog />,
     },
 ];
 
