@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
 import { ChirpData } from "@/components/chirp/Chirp";
@@ -13,6 +13,12 @@ interface UserProfile {
     email: string;
 }
 
+interface ChirpResponse {
+    data: ChirpData[];
+    nextCursor: string | null;
+    hasMore: boolean;
+}
+
 const Profile: FC = () => {
     const { userId } = useParams<{ userId: string }>();
     const navigate = useNavigate();
@@ -22,9 +28,12 @@ const Profile: FC = () => {
     const [profile, setProfile] = useState<ProfileData | null>(null);
     const [chirps, setChirps] = useState<ChirpData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isFollowing, setIsFollowing] = useState(false);
     const [isOwnProfile, setIsOwnProfile] = useState(false);
+    const [nextCursor, setNextCursor] = useState<string | null>(null);
+    const [hasMore, setHasMore] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -83,7 +92,7 @@ const Profile: FC = () => {
 
                 // Fetch user's chirps
                 const chirpsResponse = await fetch(
-                    `http://localhost:3000/api/chirps/user/${userId}`,
+                    `http://localhost:3000/api/chirps/user/${userId}?limit=10`,
                     {
                         headers: getAuthHeaders(),
                     }
@@ -93,8 +102,10 @@ const Profile: FC = () => {
                     throw new Error("Failed to fetch user chirps");
                 }
 
-                const chirpsData = await chirpsResponse.json();
-                setChirps(chirpsData);
+                const chirpsData: ChirpResponse = await chirpsResponse.json();
+                setChirps(chirpsData.data);
+                setNextCursor(chirpsData.nextCursor);
+                setHasMore(chirpsData.hasMore);
 
                 // Check if current user is following this profile
                 const followsResponse = await fetch(
@@ -119,6 +130,33 @@ const Profile: FC = () => {
 
         fetchUserProfile();
     }, [userId, navigate, isAuthenticated, getAuthHeaders, currentUserId]);
+
+    const handleLoadMore = useCallback(async () => {
+        if (!nextCursor || isLoadingMore) return;
+        
+        setIsLoadingMore(true);
+        try {
+            const response = await fetch(
+                `http://localhost:3000/api/chirps/user/${userId}?cursor=${encodeURIComponent(nextCursor)}&limit=10`,
+                {
+                    headers: getAuthHeaders(),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch more chirps");
+            }
+
+            const data: ChirpResponse = await response.json();
+            setChirps(prevChirps => [...prevChirps, ...data.data]);
+            setNextCursor(data.nextCursor);
+            setHasMore(data.hasMore);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An error occurred");
+        } finally {
+            setIsLoadingMore(false);
+        }
+    }, [userId, nextCursor, isLoadingMore, getAuthHeaders]);
 
     const handleFollowToggle = async () => {
         try {
@@ -261,7 +299,14 @@ const Profile: FC = () => {
             </div>
 
             <h2 className="text-xl font-semibold mb-4">Chirps</h2>
-            <ChirpList chirps={chirps} isLoading={false} error={undefined} />
+            <ChirpList 
+                chirps={chirps} 
+                isLoading={false} 
+                isLoadingMore={isLoadingMore}
+                error={undefined} 
+                hasMore={hasMore}
+                onLoadMore={handleLoadMore}
+            />
         </div>
     );
 };

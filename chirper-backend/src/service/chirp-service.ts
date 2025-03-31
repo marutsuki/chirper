@@ -29,16 +29,58 @@ export async function getAllChirps(limit: number = 100): Promise<Chirp[]> {
 
 export async function getChirpsByUserId(
     userId: number,
-    limit: number = 10
-): Promise<Chirp[]> {
+    pagination: PaginationParams = {}
+): Promise<PaginatedResult<Chirp>> {
     try {
-        const chirps = await knex("chirp.chirps")
+        const { limit = 10, cursor } = pagination;
+        let query = knex("chirp.chirps")
             .where({ user_id: userId })
             .orderBy("created_at", "desc")
-            .limit(limit)
-            .select("*");
-        logger.info(`Retrieved ${chirps.length} chirps for user id: ${userId}`);
-        return chirps;
+            .orderBy("id", "desc")
+            .limit(limit + 1); // Get one extra to check if there are more
+
+        // Apply cursor-based pagination if cursor is provided
+        if (cursor) {
+            const [timestamp, id] = cursor.split("@");
+            // Parse the timestamp from ISO format
+            const parsedTimestamp = new Date(timestamp).toISOString();
+            
+            query = query.where(function () {
+                this.where("created_at", "<", parsedTimestamp).orWhere(function () {
+                    this.where("created_at", "=", parsedTimestamp).andWhere(
+                        "id",
+                        "<",
+                        id
+                    );
+                });
+            });
+        }
+
+        const chirps = await query.select("*");
+
+        // Check if there are more results
+        const hasMore = chirps.length > limit;
+        const results = hasMore ? chirps.slice(0, limit) : chirps;
+
+        // Create the next cursor
+        let nextCursor = null;
+        if (hasMore && results.length > 0) {
+            const lastChirp = results[results.length - 1];
+            // Format the timestamp in ISO format to ensure consistency
+            const timestamp = new Date(lastChirp.created_at).toISOString();
+            nextCursor = `${timestamp}@${lastChirp.id}`;
+        }
+
+        logger.info(
+            { userId, limit, cursor },
+            `Retrieved ${results.length} chirps for user id: ${userId}`
+        );
+
+        return {
+            data: results,
+            nextCursor,
+            hasMore,
+        };
     } catch (error: unknown) {
         logger.error(
             error,
@@ -50,21 +92,71 @@ export async function getChirpsByUserId(
     }
 }
 
+export interface PaginationParams {
+    limit?: number;
+    cursor?: string; // Format: "timestamp@id"
+}
+
+export interface PaginatedResult<T> {
+    data: T[];
+    nextCursor: string | null;
+    hasMore: boolean;
+}
+
 export async function getChirpsByUserIds(
     userIds: number[],
-    limit: number = 100
-): Promise<Chirp[]> {
+    pagination: PaginationParams = {}
+): Promise<PaginatedResult<Chirp>> {
     try {
-        const chirps = await knex("chirp.chirps")
+        const { limit = 10, cursor } = pagination;
+        let query = knex("chirp.chirps")
             .whereIn("user_id", userIds)
             .orderBy("created_at", "desc")
-            .limit(limit)
-            .select("*");
+            .orderBy("id", "desc")
+            .limit(limit + 1); // Get one extra to check if there are more
+
+        // Apply cursor-based pagination if cursor is provided
+        if (cursor) {
+            const [timestamp, id] = cursor.split("@");
+            // Parse the timestamp from ISO format
+            const parsedTimestamp = new Date(timestamp).toISOString();
+            
+            query = query.where(function () {
+                this.where("created_at", "<", parsedTimestamp).orWhere(function () {
+                    this.where("created_at", "=", parsedTimestamp).andWhere(
+                        "id",
+                        "<",
+                        id
+                    );
+                });
+            });
+        }
+
+        const chirps = await query.select("*");
+
+        // Check if there are more results
+        const hasMore = chirps.length > limit;
+        const results = hasMore ? chirps.slice(0, limit) : chirps;
+
+        // Create the next cursor
+        let nextCursor = null;
+        if (hasMore && results.length > 0) {
+            const lastChirp = results[results.length - 1];
+            // Format the timestamp in ISO format to ensure consistency
+            const timestamp = new Date(lastChirp.created_at).toISOString();
+            nextCursor = `${timestamp}@${lastChirp.id}`;
+        }
+
         logger.info(
-            { userIds },
-            "Retrieved ${chirps.length} chirps for user ids"
+            { userIds, limit, cursor },
+            `Retrieved ${results.length} chirps for user ids`
         );
-        return chirps;
+
+        return {
+            data: results,
+            nextCursor,
+            hasMore,
+        };
     } catch (error: unknown) {
         logger.error(
             error,

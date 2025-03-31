@@ -5,6 +5,7 @@ import {
     getAllChirps,
     getChirpById,
     getChirpsByUserId,
+    PaginationParams,
     updateChirpById,
 } from "@/service/chirp-service";
 import express from "express";
@@ -38,8 +39,17 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.get("/user/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
-        const chirps = await getChirpsByUserId(parseInt(id));
-        res.json(chirps);
+        // Parse pagination parameters
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+        const cursor = req.query.cursor as string | undefined;
+        
+        const pagination: PaginationParams = {
+            limit,
+            cursor
+        };
+
+        const result = await getChirpsByUserId(parseInt(id), pagination);
+        res.json(result);
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
