@@ -13,7 +13,7 @@
         "migrate:down": "knex migrate:down"
     },
     "author": "marutsuki",
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "@types/bcrypt": "^5.0.2",
         "@types/body-parser": "^1.19.5",
