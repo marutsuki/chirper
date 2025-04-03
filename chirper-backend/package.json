@@ -12,7 +12,7 @@
         "migrate:up": "knex migrate:up",
         "migrate:down": "knex migrate:down",
         "build:lambda": "tsc --build && tsc-alias && npm run package:lambda",
-        "package:lambda": "mkdir -p dist/lambda && cp -r dist/src/* dist/lambda/ && cd dist/lambda && zip -r ../lambda-deployment.zip ."
+        "package:lambda": "if not exist dist\\lambda mkdir dist\\lambda && xcopy /E /I dist\\src\\* dist\\lambda\\ && cd dist\\lambda && powershell Compress-Archive -Path * -DestinationPath ..\\lambda-deployment.zip -Force"
     },
     "author": "marutsuki",
     "license": "MIT",

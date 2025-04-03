@@ -5,7 +5,7 @@ variable "api_gateway_name" {
 
 variable "allow_origins" {
   type        = list(string)
-  default     = ["*"]
+  default     = ["https://chirper.marutsuki.io"]
 }
 
 variable "allow_methods" {

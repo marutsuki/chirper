@@ -1,4 +1,3 @@
-import pg from 'pg';
 import knex from "knex";
 import config from "@knexfile";
 import logger from "@/config/logging";

@@ -1,10 +1,31 @@
-variable "function_name" {
+variable "aws_region" {
   type        = string
-  default     = "chirper-serverless"
+  default     = "us-east-1"
+}
+
+variable "project_name" {
+  type        = string
+  default     = "chirper"
+}
+
+variable "environment" {
+  type        = string
+  default     = "prod"
+}
+
+variable "log_retention_days" {
+  type        = number
+  default     = 30
+}
+
+variable "allowed_origins" {
+  type        = string
+  default     = "https://chirper.marutsuki.io"
 }
 
 variable "lambda_zip_path" {
   type        = string
+  default     = "../chirper-backend/dist/lambda-deployment.zip"
 }
 
 variable "lambda_handler" {
@@ -17,10 +38,6 @@ variable "lambda_runtime" {
   default     = "nodejs22.x"
 }
 
-variable "lambda_role_arn" {
-  type        = string
-}
-
 variable "lambda_timeout" {
   type        = number
   default     = 30
@@ -31,9 +48,10 @@ variable "lambda_memory_size" {
   default     = 512
 }
 
-variable "environment_variables" {
-  type        = map(string)
-  default     = {}
+variable "database_url" {
+  type        = string
+  default     = ""
+  sensitive   = true
 }
 
 variable "subnet_ids" {
@@ -44,8 +62,4 @@ variable "subnet_ids" {
 variable "security_group_ids" {
   type        = list(string)
   default     = []
-}
-
-variable "api_gateway_execution_arn" {
-  type        = string
 }
