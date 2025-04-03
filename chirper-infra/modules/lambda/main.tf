@@ -1,5 +1,5 @@
 # Lambda function
-resource "aws_lambda_function" "chirper_serverless" {
+resource "aws_lambda_function" "chirper_api" {
   function_name = var.function_name
   description   = "Chirper API backend"
   
@@ -17,4 +17,5 @@ resource "aws_lambda_function" "chirper_serverless" {
   environment {
     variables = var.environment_variables
   }
+
 }
