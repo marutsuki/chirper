@@ -130,3 +130,8 @@ dist
 .pnp.*
 
 **/*.db
+
+**/.terraform/*
+
+*.tfstate
+*.tfstate.*
