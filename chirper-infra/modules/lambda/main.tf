@@ -17,5 +17,4 @@ resource "aws_lambda_function" "chirper_api" {
   environment {
     variables = var.environment_variables
   }
-
 }
