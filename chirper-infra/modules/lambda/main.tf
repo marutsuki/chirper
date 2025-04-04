@@ -38,6 +38,7 @@ resource "aws_lambda_permission" "api_gateway_permission" {
 
 # CloudWatch log group for Lambda
 resource "aws_cloudwatch_log_group" "lambda_logs" {
-  name              = "/aws/lambda/${aws_lambda_function.chirper_serverless.function_name}"
+  name              = "/aws/lambda/${var.function_name}"
   retention_in_days = 30
+  depends_on        = [aws_lambda_function.chirper_serverless]
 }

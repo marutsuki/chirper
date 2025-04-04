@@ -26,8 +26,10 @@ resource "aws_lambda_function" "db_migration_lambda" {
 }
 
 resource "aws_cloudwatch_log_group" "migration_lambda_logs" {
-  name              = "/aws/lambda/${aws_lambda_function.db_migration_lambda.function_name}"
+  name              = "/aws/lambda/${var.function_name}"
   retention_in_days = 30
+  
+  depends_on        = [aws_lambda_function.db_migration_lambda]
 }
 
 resource "aws_lambda_invocation" "run_migrations" {
