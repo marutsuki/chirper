@@ -1,4 +1,3 @@
-# Provider configuration
 provider "aws" {
   region = var.aws_region
 }
@@ -70,6 +69,27 @@ module "rds" {
   source = "./modules/rds"
 
   depends_on = [module.secret]
+}
+
+# Migration Lambda module for running database migrations
+module "migration_lambda" {
+  source = "./modules/migration_lambda"
+
+  function_name   = "${var.project_name}-db-migrations"
+  lambda_zip_path = var.lambda_zip_path
+  lambda_runtime  = var.lambda_runtime
+  lambda_role_arn = module.iam.lambda_role_arn
+  environment     = var.environment
+  database_url    = module.rds.db_connection_string
+
+  rds_endpoint = module.rds.db_endpoint
+  rds_username = module.rds.db_username
+  rds_db_name  = module.rds.db_name
+
+  subnet_ids         = var.subnet_ids
+  security_group_ids = var.security_group_ids
+
+  depends_on = [module.rds]
 }
 
 # Output the API Gateway URL

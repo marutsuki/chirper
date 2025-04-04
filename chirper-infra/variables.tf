@@ -10,7 +10,7 @@ variable "project_name" {
 
 variable "environment" {
   type        = string
-  default     = "prod"
+  default     = "production"
 }
 
 variable "log_retention_days" {
