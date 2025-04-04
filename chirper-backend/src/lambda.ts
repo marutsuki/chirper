@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Context, Handler } from 'aws-lambda';
 import serverless from 'serverless-http';
 import app from '@/app';
 import chirpRouter from '@/controller/chirp-controller';
@@ -23,7 +23,7 @@ app.use('/api/profiles', profileRouter);
 const handler = serverless(app);
 
 // Lambda handler function
-export const lambdaHandler = async (
+export const lambdaHandler: Handler = async (
   event: APIGatewayProxyEvent,
   context: Context
 ): Promise<APIGatewayProxyResult> => {

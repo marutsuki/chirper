@@ -4,21 +4,20 @@ const outputFile = "chirper.log";
 
 const fileTransport = pino.transport({
     targets: [
-        ...((process.env.NODE_ENV === "production" && [
-            {
-                level: "trace",
-                target: "pino/file",
-                options: {
-                    destination: outputFile,
-                },
-            },
-        ]) ||
-            []),
-        {
-            level: "info",
-            target: "pino-pretty",
-            options: {},
-        },
+        ...(process.env.NODE_ENV === "production"
+            ? [
+                  {
+                      level: "trace",
+                      target: "pino/file",
+                  },
+              ]
+            : [
+                  {
+                      level: "info",
+                      target: "pino-pretty",
+                      options: {},
+                  },
+              ]),
     ],
 });
 
