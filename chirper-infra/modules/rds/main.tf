@@ -1,5 +1,5 @@
 data "aws_secretsmanager_secret" "password" {
-  name = "db-chirper-password"
+  name = "test-db-password"
 }
 
 data "aws_secretsmanager_secret_version" "password" {

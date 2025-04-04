@@ -25,12 +25,12 @@ variable "allowed_origins" {
 
 variable "lambda_zip_path" {
   type        = string
-  default     = "../chirper-backend/dist/lambda-deployment.zip"
+  default     = "../lambda-deployment.zip"
 }
 
 variable "lambda_handler" {
   type        = string
-  default     = "lambda.lambdaHandler"
+  default     = "lambda/lambda.lambdaHandler"
 }
 
 variable "lambda_runtime" {

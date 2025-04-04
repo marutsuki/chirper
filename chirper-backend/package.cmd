@@ -14,4 +14,4 @@ xcopy package.json dist\lambda\
 cd dist\lambda
 npm install --production
 
-powershell Compress-Archive -Path * -DestinationPath ..\lambda-deployment.zip -Force
+powershell Compress-Archive -Path dist\lambda -DestinationPath ..\lambda-deployment.zip -Force

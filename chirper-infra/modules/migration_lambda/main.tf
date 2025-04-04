@@ -3,7 +3,7 @@ resource "aws_lambda_function" "db_migration_lambda" {
   description   = "lambda function to run Knex migrations"
   
   filename      = var.lambda_zip_path
-  handler       = "lambda-migration.runMigrations"
+  handler       = "lambda/lambda-migration.runMigrations"
   runtime       = var.lambda_runtime
   
   role          = var.lambda_role_arn
