@@ -1,5 +1,5 @@
 data "aws_secretsmanager_secret" "password" {
-  name = "test-db-password-4"
+  name = "test-db-password-8"
 }
 
 data "aws_secretsmanager_secret_version" "password" {
