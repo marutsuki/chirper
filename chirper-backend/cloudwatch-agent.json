@@ -1,0 +1,15 @@
+{
+    "logs": {
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "/opt/chirper-backend/logs/*.log",
+                        "log_group_name": "${var.log_group_name}",
+                        "log_stream_name": "{instance_id}"
+                    }
+                ]
+            }
+        }
+    }
+}

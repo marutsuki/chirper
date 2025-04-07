@@ -1,0 +1,36 @@
+# AWS region to deploy resources
+aws_region = "us-east-1"
+
+# Project name (used for resource naming)
+project_name = "chirper"
+
+# Deployment environment
+environment = "prod"
+
+# Log retention period in days
+log_retention_days = 30
+
+# Comma-separated list of allowed origins for CORS
+allowed_origins = "https://your-frontend-domain.com,http://localhost:5173"
+
+# Path to the Lambda deployment package
+lambda_zip_path = "../chirper-backend/dist/lambda-deployment.zip"
+
+# Lambda configuration
+lambda_handler = "lambda.lambdaHandler"
+lambda_runtime = "nodejs18.x"
+lambda_timeout = 30
+lambda_memory_size = 512
+
+# Database connection URL (sensitive)
+database_url = "postgresql://username:password@your-rds-instance.region.rds.amazonaws.com:5432/chirper_db"
+
+# VPC configuration for Lambda (if using RDS in a VPC)
+subnet_ids = [
+  "subnet-xxxxxxxx",
+  "subnet-yyyyyyyy"
+]
+
+security_group_ids = [
+  "sg-zzzzzzzz"
+]

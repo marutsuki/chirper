@@ -20,6 +20,7 @@ module "iam" {
   source = "./modules/iam"
 
   secretsmanager_secret_arn = module.secret.secrets_manager_arn
+  deployment_bucket  = aws_s3_bucket.deployment_bucket.bucket
 
   depends_on = [module.secret]
 }
@@ -32,36 +33,44 @@ module "api_gateway" {
   allow_origins     = split(",", var.allowed_origins)
   stage_name        = var.environment
   log_group_arn     = module.cloudwatch.api_gateway_log_group_arn
-  lambda_invoke_arn = module.lambda.lambda_invoke_arn
+  backend_endpoint  = module.ec2.ec2_endpoint
 
+  depends_on = [module.ec2]
 }
 
-# Lambda module
-module "lambda" {
-  source = "./modules/lambda"
+# S3 bucket for deployment packages
+resource "aws_s3_bucket" "deployment_bucket" {
+  bucket = "${var.project_name}-deployments-${random_string.bucket_suffix.result}"
 
-  function_name      = "${var.project_name}-api"
-  lambda_zip_path    = var.lambda_zip_path
-  lambda_handler     = var.lambda_handler
-  lambda_runtime     = var.lambda_runtime
-  lambda_role_arn    = module.iam.lambda_role_arn
-  lambda_timeout     = var.lambda_timeout
-  lambda_memory_size = var.lambda_memory_size
-
-  environment_variables = {
-    NODE_ENV        = var.environment
-    ALLOWED_ORIGINS = var.allowed_origins
-    DATABASE_URL    = module.rds.db_connection_string
+  tags = {
+    Name = "${var.project_name}-deployment"
   }
+}
 
-  subnet_ids         = var.subnet_ids
-  security_group_ids = var.security_group_ids
+resource "random_string" "bucket_suffix" {
+  length  = 8
+  special = false
+  upper   = false
+}
 
-  # API Gateway execution ARN for Lambda permissions
-  api_gateway_execution_arn = module.api_gateway.api_gateway_execution_arn
+# EC2 module
+module "ec2" {
+  source = "./modules/ec2"
 
-  # Depends on CloudWatch for logging
-  depends_on = [module.cloudwatch]
+  project_name            = var.project_name
+  environment             = var.environment
+  role_name               = module.iam.ec2_role_name
+  key_name                = var.ec2_key_name
+  subnet_id               = var.subnet_id
+  ssh_allowed_cidr_blocks = var.ssh_allowed_cidr_blocks
+  allowed_origins         = var.allowed_origins
+  database_url            = module.rds.db_connection_string
+  deployment_bucket       = aws_s3_bucket.deployment_bucket.bucket
+  log_group_name          = module.cloudwatch.ec2_log_group_name
+  log_retention_days      = var.log_retention_days
+  secretsmanager_secret_arn = module.secret.secrets_manager_arn
+
+  depends_on = [module.cloudwatch, aws_s3_bucket.deployment_bucket]
 }
 
 
@@ -92,8 +101,23 @@ module "migration_lambda" {
   depends_on = [module.rds]
 }
 
-# Output the API Gateway URL
+# Outputs
 output "api_gateway_url" {
   value       = module.api_gateway.api_gateway_url
   description = "The URL of the API Gateway"
+}
+
+output "ec2_public_ip" {
+  value       = module.ec2.ec2_public_ip
+  description = "Public IP address of the EC2 instance"
+}
+
+output "ec2_endpoint" {
+  value       = module.ec2.ec2_endpoint
+  description = "HTTP endpoint for the EC2 instance"
+}
+
+output "deployment_bucket" {
+  value       = aws_s3_bucket.deployment_bucket.bucket
+  description = "S3 bucket for deployment packages"
 }

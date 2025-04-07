@@ -32,6 +32,7 @@ variable "log_group_arn" {
   type        = string
 }
 
-variable "lambda_invoke_arn" {
+variable "backend_endpoint" {
   type        = string
+  description = "HTTP endpoint for the backend service (EC2 instance)"
 }

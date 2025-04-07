@@ -12,7 +12,9 @@
         "migrate:up": "knex migrate:up",
         "migrate:down": "knex migrate:down",
         "build:lambda": "tsc --build && tsc-alias && npm run package:lambda",
-        "package:lambda": "package.cmd"
+        "package:lambda": "package.cmd",
+        "build:ec2": "tsc --build && tsc-alias && npm run package:ec2",
+        "package:ec2": "package-ec2.cmd"
     },
     "author": "marutsuki",
     "license": "MIT",

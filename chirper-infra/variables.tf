@@ -1,6 +1,6 @@
 variable "aws_region" {
   type        = string
-  default     = "us-east-1"
+  default     = "ap-southeast-2"
 }
 
 variable "project_name" {
@@ -23,29 +23,35 @@ variable "allowed_origins" {
   default     = "https://chirper.marutsuki.io"
 }
 
-variable "lambda_zip_path" {
+# EC2 variables
+variable "ec2_key_name" {
   type        = string
-  default     = "../lambda-deployment.zip"
+  description = "Name of the SSH key pair for EC2 instance access"
 }
 
-variable "lambda_handler" {
+variable "subnet_id" {
   type        = string
-  default     = "lambda/lambda.lambdaHandler"
+  description = "Subnet ID where the EC2 instance will be launched"
+  default     = ""
+}
+
+variable "ssh_allowed_cidr_blocks" {
+  type        = list(string)
+  description = "CIDR blocks allowed for SSH access"
+  default     = ["0.0.0.0/0"] # In production, restrict this to specific IPs
+}
+
+# Lambda variables for migration Lambda
+variable "lambda_zip_path" {
+  type        = string
+  default     = "../out/backend-deployment-lambda.zip"
+  description = "Path to the Lambda deployment package (still needed for migration Lambda)"
 }
 
 variable "lambda_runtime" {
   type        = string
   default     = "nodejs22.x"
-}
-
-variable "lambda_timeout" {
-  type        = number
-  default     = 30
-}
-
-variable "lambda_memory_size" {
-  type        = number
-  default     = 512
+  description = "Runtime for the migration Lambda function"
 }
 
 # Database URL is now provided by the RDS module output

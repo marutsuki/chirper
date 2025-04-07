@@ -135,3 +135,7 @@ dist
 
 *.tfstate
 *.tfstate.*
+
+chirper-backend/dist_ec2
+chirper-backend/dist_lambda
+lambda-deployment.zip
