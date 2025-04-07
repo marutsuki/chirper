@@ -28,7 +28,10 @@ resource "aws_api_gateway_deployment" "chirper_api_deployment" {
   depends_on = [
     aws_api_gateway_integration.root_integration,
     aws_api_gateway_integration.options_integration,
-    aws_api_gateway_integration_response.options_integration_response
+    aws_api_gateway_integration_response.options_integration_response,
+    aws_api_gateway_integration.proxy_integration,
+    aws_api_gateway_integration.proxy_options_integration,
+    aws_api_gateway_integration_response.proxy_options_integration_response
   ]
   lifecycle {
     create_before_destroy = true
@@ -92,6 +95,82 @@ resource "aws_api_gateway_integration_response" "options_integration_response" {
   resource_id   = aws_api_gateway_rest_api.chirper_api_gateway.root_resource_id
   http_method   = aws_api_gateway_method.options_method.http_method
   status_code   = aws_api_gateway_method_response.options_200.status_code
+  
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'${join(",", var.allow_headers)}'"
+    "method.response.header.Access-Control-Allow-Methods" = "'${join(",", var.allow_methods)}'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'${join(",", var.allow_origins)}'"
+    "method.response.header.Access-Control-Allow-Credentials" = "'${var.allow_credentials}'"
+  }
+}
+
+resource "aws_api_gateway_resource" "proxy" {
+  rest_api_id = aws_api_gateway_rest_api.chirper_api_gateway.id
+  parent_id   = aws_api_gateway_rest_api.chirper_api_gateway.root_resource_id
+  path_part   = "{proxy+}"
+}
+
+resource "aws_api_gateway_method" "proxy_method" {
+  rest_api_id   = aws_api_gateway_rest_api.chirper_api_gateway.id
+  resource_id   = aws_api_gateway_resource.proxy.id
+  http_method   = "ANY"
+  authorization = "NONE"
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
+}
+
+resource "aws_api_gateway_integration" "proxy_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.chirper_api_gateway.id
+  resource_id             = aws_api_gateway_resource.proxy.id
+  http_method             = aws_api_gateway_method.proxy_method.http_method
+  type                    = "HTTP_PROXY"
+  integration_http_method = "ANY"
+  uri                     = "${var.backend_endpoint}/{proxy}"
+  connection_type         = "INTERNET"
+  request_parameters = {
+    "integration.request.path.proxy" = "method.request.path.proxy"
+  }
+}
+
+resource "aws_api_gateway_method" "proxy_options_method" {
+  rest_api_id   = aws_api_gateway_rest_api.chirper_api_gateway.id
+  resource_id   = aws_api_gateway_resource.proxy.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "proxy_options_integration" {
+  rest_api_id   = aws_api_gateway_rest_api.chirper_api_gateway.id
+  resource_id   = aws_api_gateway_resource.proxy.id
+  http_method   = aws_api_gateway_method.proxy_options_method.http_method
+  type          = "MOCK"
+  request_templates = {
+    "application/json" = jsonencode({
+      statusCode = 200
+    })
+  }
+}
+
+resource "aws_api_gateway_method_response" "proxy_options_200" {
+  rest_api_id   = aws_api_gateway_rest_api.chirper_api_gateway.id
+  resource_id   = aws_api_gateway_resource.proxy.id
+  http_method   = aws_api_gateway_method.proxy_options_method.http_method
+  status_code   = "200"
+  
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Credentials" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "proxy_options_integration_response" {
+  rest_api_id   = aws_api_gateway_rest_api.chirper_api_gateway.id
+  resource_id   = aws_api_gateway_resource.proxy.id
+  http_method   = aws_api_gateway_method.proxy_options_method.http_method
+  status_code   = aws_api_gateway_method_response.proxy_options_200.status_code
   
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'${join(",", var.allow_headers)}'"

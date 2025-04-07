@@ -1,3 +1,8 @@
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
 import app from "@/app";
 import chirpRouter from "@/controller/chirp-controller";
 import authRouter from "@/controller/auth-controller";

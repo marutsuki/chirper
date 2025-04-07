@@ -10,7 +10,7 @@ mkdir -p /opt/chirper-backend/
 npm install -g pm2
 
 # Setup environment variables
-cat > /opt/chirper-backend/.env <<EOL
+cat > /opt/.env <<EOL
 NODE_ENV=${environment}
 PORT=3000
 ALLOWED_ORIGINS=${allowed_origins}

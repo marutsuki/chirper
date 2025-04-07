@@ -1,9 +1,6 @@
 // Update with your config settings.
 import { Knex } from "knex";
-import dotenv from "dotenv";
 import path from "path";
-
-dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const getConnectionConfig = (env: string): Knex.PgConnectionConfig | string => {
     if (process.env.DATABASE_URL) {

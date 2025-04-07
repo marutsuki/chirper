@@ -1,7 +1,7 @@
 # EC2 instance for Chirper backend
 resource "aws_instance" "chirper_backend" {
-  ami                    = var.ami_id # Amazon Linux 2023 AMI
-  instance_type          = "t2.micro" # Free tier eligible
+  ami                    = var.ami_id
+  instance_type          = "t2.micro"
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.chirper_ec2_sg.id]
   subnet_id              = var.subnet_id
