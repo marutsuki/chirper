@@ -54,8 +54,6 @@ variable "lambda_runtime" {
   description = "Runtime for the migration Lambda function"
 }
 
-# Database URL is now provided by the RDS module output
-
 variable "subnet_ids" {
   type        = list(string)
   default     = []

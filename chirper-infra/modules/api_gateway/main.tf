@@ -20,11 +20,22 @@ resource "aws_api_gateway_stage" "chirper_api_stage" {
   rest_api_id = aws_api_gateway_rest_api.chirper_api_gateway.id
   stage_name  = var.stage_name
   deployment_id = aws_api_gateway_deployment.chirper_api_deployment.id
+
+  depends_on = [ aws_api_gateway_deployment.chirper_api_deployment ]
 }
 
 resource "aws_api_gateway_deployment" "chirper_api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.chirper_api_gateway.id
   
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_method.root_method,
+      aws_api_gateway_method.options_method,
+      aws_api_gateway_method.proxy_method,
+      aws_api_gateway_method.proxy_options_method,
+    ]))
+  }
+
   depends_on = [
     aws_api_gateway_integration.root_integration,
     aws_api_gateway_integration.options_integration,
@@ -33,6 +44,7 @@ resource "aws_api_gateway_deployment" "chirper_api_deployment" {
     aws_api_gateway_integration.proxy_options_integration,
     aws_api_gateway_integration_response.proxy_options_integration_response
   ]
+  
   lifecycle {
     create_before_destroy = true
   }

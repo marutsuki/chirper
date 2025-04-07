@@ -5,7 +5,7 @@ resource "random_password" "master" {
 }
 
 resource "aws_secretsmanager_secret" "password" {
-  name = "test-db-password-13"
+  name = "test-db-password-14"
 }
 
 resource "aws_secretsmanager_secret_version" "password" {
