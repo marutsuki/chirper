@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { backend } from "@/config";
 
 interface User {
     id: number;
@@ -45,7 +46,7 @@ const UserSearch: FC = () => {
             setLoading(true);
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/users?q=${encodeURIComponent(query)}`,
+                    backend(`/api/users?q=${encodeURIComponent(query)}`),
                     {
                         headers: getAuthHeaders(),
                     }

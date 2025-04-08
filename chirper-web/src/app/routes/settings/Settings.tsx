@@ -4,6 +4,7 @@ import { useAuth } from "@/app/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { backend } from "@/config";
 
 interface UserSettings {
     username: string;
@@ -38,7 +39,7 @@ const Settings: FC = () => {
 
             try {
                 const response = await fetch(
-                    `http://localhost:3000/api/users/${currentUserId}`,
+                    backend(`/api/users/${currentUserId}`),
                     {
                         headers: getAuthHeaders(),
                     }
@@ -78,7 +79,7 @@ const Settings: FC = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/api/users/${currentUserId}`,
+                backend(`/api/users/${currentUserId}`),
                 {
                     method: "PUT",
                     headers: {
@@ -131,7 +132,7 @@ const Settings: FC = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/api/users/${currentUserId}/password`,
+                backend(`/api/users/${currentUserId}/password`),
                 {
                     method: "PUT",
                     headers: {

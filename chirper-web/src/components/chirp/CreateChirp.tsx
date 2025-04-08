@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../ui/textarea";
 import { useAuth } from "@/app/AuthContext";
+import { backend } from "@/config";
 
 interface CreateChirpProps {
     onChirpCreated: () => void;
@@ -25,7 +26,7 @@ const CreateChirp: FC<CreateChirpProps> = ({ onChirpCreated }) => {
         setError(null);
 
         try {
-            const response = await fetch("http://localhost:3000/api/chirps", {
+            const response = await fetch(backend("/api/chirps"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

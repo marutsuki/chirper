@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useAuth } from "@/app/AuthContext";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
+import { backend } from "@/config";
 
 const shape = {
     username: z.string().min(2, {
@@ -26,7 +27,7 @@ const Login: FC = () => {
         startTransition(async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:3000/auth/login",
+                    backend("/auth/login"),
                     {
                         headers: {
                             "Content-Type": "application/json",

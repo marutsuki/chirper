@@ -4,6 +4,7 @@ import { z } from "zod";
 import Form from "@/components/form/Form";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
+import { backend } from "@/config";
 
 type RegisterRequest = {
     username: string;
@@ -30,7 +31,7 @@ const Register: FC = () => {
 
     const onSubmit = (req: RegisterRequest) => {
         startTransition(async () => {
-            const error = await fetch("http://localhost:3000/auth/register", {
+            const error = await fetch(backend("/auth/register"), {
                 headers: {
                     "Content-Type": "application/json",
                 },

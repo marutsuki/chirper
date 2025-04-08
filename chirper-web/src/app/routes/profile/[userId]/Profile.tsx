@@ -6,6 +6,7 @@ import ChirpList from "@/components/chirp/ChirpList";
 import { Button } from "@/components/ui/button";
 import ProfileForm, { ProfileData } from "@/components/profile/ProfileForm";
 import { FaGlobe, FaLocationArrow } from "react-icons/fa";
+import { backend } from "@/config";
 
 interface UserProfile {
     id: number;
@@ -54,7 +55,7 @@ const Profile: FC = () => {
             try {
                 // Fetch user data
                 const userResponse = await fetch(
-                    `http://localhost:3000/api/users/${userId}`,
+                    backend(`/api/users/${userId}`),
                     {
                         headers: getAuthHeaders(),
                     }
@@ -79,7 +80,7 @@ const Profile: FC = () => {
 
                 // Fetch profile data
                 const profileResponse = await fetch(
-                    `http://localhost:3000/api/profiles/user/${userId}`,
+                    backend(`/api/profiles/user/${userId}`),
                     {
                         headers: getAuthHeaders(),
                     }
@@ -92,7 +93,7 @@ const Profile: FC = () => {
 
                 // Fetch user's chirps
                 const chirpsResponse = await fetch(
-                    `http://localhost:3000/api/chirps/user/${userId}?limit=10`,
+                    backend(`/api/chirps/user/${userId}?limit=10`),
                     {
                         headers: getAuthHeaders(),
                     }
@@ -109,7 +110,7 @@ const Profile: FC = () => {
 
                 // Check if current user is following this profile
                 const followsResponse = await fetch(
-                    `http://localhost:3000/api/follows/check/${userId}`,
+                    backend(`/api/follows/check/${userId}`),
                     {
                         headers: getAuthHeaders(),
                     }
@@ -137,7 +138,7 @@ const Profile: FC = () => {
         setIsLoadingMore(true);
         try {
             const response = await fetch(
-                `http://localhost:3000/api/chirps/user/${userId}?cursor=${encodeURIComponent(nextCursor)}&limit=10`,
+                backend(`/api/chirps/user/${userId}?cursor=${encodeURIComponent(nextCursor)}&limit=10`),
                 {
                     headers: getAuthHeaders(),
                 }
@@ -160,7 +161,7 @@ const Profile: FC = () => {
 
     const handleFollowToggle = async () => {
         try {
-            const url = `http://localhost:3000/api/follows/${isFollowing ? "unfollow" : "follow"}/${userId}`;
+            const url = backend(`/api/follows/${isFollowing ? "unfollow" : "follow"}/${userId}`);
             const response = await fetch(url, {
                 method: "POST",
                 headers: getAuthHeaders(),
@@ -188,7 +189,7 @@ const Profile: FC = () => {
 
     const handleSaveProfile = async (updatedProfile: ProfileData) => {
         const response = await fetch(
-            `http://localhost:3000/api/profiles/user/${userId}`,
+            backend(`/api/profiles/user/${userId}`),
             {
                 method: "PUT",
                 headers: {

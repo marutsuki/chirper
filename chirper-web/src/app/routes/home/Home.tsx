@@ -4,6 +4,7 @@ import CreateChirp from "@/components/chirp/CreateChirp";
 import { ChirpData } from "@/components/chirp/Chirp";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/app/AuthContext";
+import { backend } from "@/config";
 
 interface TimelineResponse {
     data: ChirpData[];
@@ -30,7 +31,7 @@ const Home: FC = () => {
         setError(null);
 
         try {
-            const url = new URL("http://localhost:3000/api/timeline");
+            const url = new URL(backend("/api/timeline"));
             if (cursor) {
                 url.searchParams.append("cursor", cursor);
             }

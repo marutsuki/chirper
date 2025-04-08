@@ -1,3 +1,4 @@
+import { backend } from '@/config';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface AuthContextType {
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       // Call the logout endpoint (optional, since we're using JWT)
-      await fetch('http://localhost:3000/auth/logout', {
+      await fetch(backend('/auth/logout'), {
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : undefined,
       });
