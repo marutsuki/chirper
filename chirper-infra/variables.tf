@@ -41,25 +41,7 @@ variable "ssh_allowed_cidr_blocks" {
   default     = ["0.0.0.0/0"] # In production, restrict this to specific IPs
 }
 
-# Lambda variables for migration Lambda
-variable "lambda_zip_path" {
+variable "db_secret_name" {
   type        = string
-  default     = "../out/backend-deployment-lambda.zip"
-  description = "Path to the Lambda deployment package (still needed for migration Lambda)"
-}
-
-variable "lambda_runtime" {
-  type        = string
-  default     = "nodejs22.x"
-  description = "Runtime for the migration Lambda function"
-}
-
-variable "subnet_ids" {
-  type        = list(string)
-  default     = []
-}
-
-variable "security_group_ids" {
-  type        = list(string)
-  default     = []
+  default     = "chirper-db-secret"
 }

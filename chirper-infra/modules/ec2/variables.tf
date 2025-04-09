@@ -24,10 +24,9 @@ variable "subnet_id" {
   description = "Subnet ID where the EC2 instance will be launched"
 }
 
-variable "ssh_allowed_cidr_blocks" {
-  type        = list(string)
-  description = "CIDR blocks allowed for SSH access"
-  default     = ["0.0.0.0/0"] # In production, restrict this to specific IPs
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC where the EC2 instance will be created"
 }
 
 variable "allowed_origins" {
@@ -65,4 +64,9 @@ variable "secretsmanager_secret_arn" {
 variable "role_name" {
   type        = string
   description = "IAM role name for the EC2 instance"
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "Security group ID for the EC2 instance"
 }

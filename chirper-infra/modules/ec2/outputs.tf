@@ -13,11 +13,6 @@ output "ec2_private_ip" {
   value       = aws_instance.chirper_backend.private_ip
 }
 
-output "ec2_security_group_id" {
-  description = "ID of the EC2 security group"
-  value       = aws_security_group.chirper_ec2_sg.id
-}
-
 output "ec2_endpoint" {
   description = "HTTP endpoint for the EC2 instance"
   value       = "http://${aws_eip.chirper_backend_eip.public_ip}:3000"
