@@ -44,6 +44,7 @@ resource "aws_lambda_invocation" "run_migrations" {
       rds_endpoint = var.rds_endpoint
       rds_username = var.rds_username
       rds_db_name  = var.rds_db_name
+      lambda_hash  = filebase64sha256(var.lambda_zip_path)
     }))
   }
 }

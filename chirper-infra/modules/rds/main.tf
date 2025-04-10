@@ -15,6 +15,20 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
   }
 }
 
+resource "aws_db_parameter_group" "rds_parameter_group" {
+  name        = "${var.project_name}-rds-parameter-group"
+  family      = "postgres17"
+
+  tags = {
+    Name = "${var.project_name} RDS Parameter Group"
+  }
+
+  parameter {
+    name  = "rds.force_ssl"
+    value = false
+  }
+}
+
 resource "aws_db_instance" "chirper" {
   allocated_storage      = 10
   db_name                = "chirper_db"
@@ -27,6 +41,7 @@ resource "aws_db_instance" "chirper" {
   vpc_security_group_ids = var.security_group_ids
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   publicly_accessible    = false
+  parameter_group_name = aws_db_parameter_group.rds_parameter_group.name
 
   tags = {
     Name = "${var.project_name}-database"

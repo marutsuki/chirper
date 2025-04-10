@@ -16,9 +16,7 @@ export const runMigrations: Handler = async (event) => {
     }, "Environment variables");
 
     try {
-        const migrationsDir = process.env.LAMBDA_TASK_ROOT 
-            ? path.join(process.env.LAMBDA_TASK_ROOT, "migrations")
-            : path.join(__dirname, "../migrations");
+        const migrationsDir = path.join(__dirname, "./migrations");
             
         logger.info(`Using migrations directory: ${migrationsDir}`);
         

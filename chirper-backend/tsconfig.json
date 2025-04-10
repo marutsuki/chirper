@@ -9,7 +9,7 @@
         "useDefineForClassFields": true,
         "module": "CommonJS",
         "skipLibCheck": true,
-        "sourceMap": true,
+        "sourceMap": false,
 
         /* Bundler mode */
         "esModuleInterop": true,
@@ -28,5 +28,5 @@
             "@db/*": ["db/*"]
         }
     },
-    "include": ["src", "db"]
+    "include": ["src"]
 }

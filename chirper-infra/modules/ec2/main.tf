@@ -1,7 +1,7 @@
 # EC2 instance for Chirper backend
 resource "aws_instance" "chirper_backend" {
   ami                    = var.ami_id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   key_name               = var.key_name
   vpc_security_group_ids = var.security_group_ids
   subnet_id              = var.subnet_id
@@ -11,9 +11,9 @@ resource "aws_instance" "chirper_backend" {
   }
 
   user_data = templatefile("${path.module}/install.sh", {
-    environment      = var.environment
-    allowed_origins  = var.allowed_origins
-    database_url     = var.database_url
+    environment       = var.environment
+    allowed_origins   = var.allowed_origins
+    database_url      = var.database_url
     deployment_bucket = var.deployment_bucket
   })
 

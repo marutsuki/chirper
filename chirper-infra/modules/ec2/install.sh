@@ -23,8 +23,8 @@ cd /opt/chirper-backend
 aws s3 cp s3://${deployment_bucket}/backend-deployment.zip ./backend-deployment.zip
 unzip -o backend-deployment.zip
 
-chmod +x /opt/chirper-backend/deploy.sh
-/opt/chirper-backend/deploy.sh
+# chmod +x /opt/chirper-backend/deploy.sh
+# /opt/chirper-backend/deploy.sh
 
 # Set up CloudWatch agent for logs
 yum install -y amazon-cloudwatch-agent

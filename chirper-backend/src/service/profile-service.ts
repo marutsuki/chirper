@@ -15,10 +15,10 @@ export async function getProfileByUserId(userId: number): Promise<Profile | null
 
 export async function createProfile(profile: Profile): Promise<number | null> {
     try {
-        const id = await knex("social.profiles").insert(profile).returning("id");
-        if (!id) return null;
-        logger.info({ id, userId: profile.user_id }, "Profile created");
-        return id[0];
+        const prof = await knex("social.profiles").insert(profile).returning("*");
+        if (!prof) return null;
+        logger.info(prof, "Profile created");
+        return prof[0].id;
     } catch (error: unknown) {
         logger.error(error, "An error occurred while creating a profile");
         throw new Error("An error occurred while creating a profile.");
