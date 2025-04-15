@@ -37,17 +37,17 @@ export async function loginUser(
 export async function createUser(user: User): Promise<number | null> {
     try {
         user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
-        const id = await knex("iam.users").insert(user).returning("id");
-        if (!id) return null;
+        const u = await knex("iam.users").insert(user).returning("id");
+        if (!u) return null;
         
         // Create a default profile for the new user
-        await createDefaultProfile(id[0]);
+        await createDefaultProfile(u[0].id);
         
         logger.info(
-            { id, username: user.username, email: user.email },
+            { id: u[0].id, username: user.username, email: user.email },
             "User created with default profile"
         );
-        return id[0];
+        return u[0].id;
     } catch (error: unknown) {
         logger.error(error, "An error occurred while creating a user");
         throw new Error("An error occurred while creating a user.");

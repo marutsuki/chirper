@@ -11,7 +11,7 @@ const getConnectionConfig = (env: string): Knex.PgConnectionConfig | string => {
         host: process.env.POSTGRESDB_HOST || 'localhost',
         database: process.env.POSTGRESDB_DATABASE || 'chirper_db',
         user: process.env.POSTGRESDB_USER || 'postgres',
-        password: process.env.POSTGRESDB_PASSWORD || '',
+        password: process.env.POSTGRESDB_PASSWORD || 'password',
         port: parseInt(process.env.POSTGRESDB_PORT || process.env.POSTGRESDB_DOCKER_PORT || '5432'),
         ssl: env === 'production' ? { rejectUnauthorized: false } : undefined
     };
@@ -41,7 +41,7 @@ export default {
         pool: getLambdaPoolConfig('development'),
         migrations: {
             tableName: "knex_migrations",
-            directory: path.join(__dirname, "migrations")
+            directory: path.join(__dirname, "../../", "migrations")
         },
     },
 
@@ -51,7 +51,7 @@ export default {
         pool: getLambdaPoolConfig('staging'),
         migrations: {
             tableName: "knex_migrations",
-            directory: path.join(__dirname, "migrations")
+            directory: path.join(__dirname, "../../", "migrations")
         },
     },
 
@@ -61,7 +61,7 @@ export default {
         pool: getLambdaPoolConfig('production'),
         migrations: {
             tableName: "knex_migrations",
-            directory: path.join(__dirname, "migrations")
+            directory: path.join(__dirname, "../../", "migrations")
         },
     },
 } as Record<string, Knex.Config>;
