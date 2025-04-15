@@ -45,3 +45,9 @@ variable "db_secret_name" {
   type        = string
   default     = "chirper-db-secret"
 }
+
+variable "cdn_domain_names" {
+  type        = list(string)
+  description = "List of domain names for the CloudFront distribution"
+  default     = []
+}

@@ -28,12 +28,12 @@ resource "aws_api_gateway_deployment" "chirper_api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.chirper_api_gateway.id
   
   triggers = {
-    redeployment = sha1(jsonencode([
+    redeployment = jsonencode([
       aws_api_gateway_method.root_method,
       aws_api_gateway_method.options_method,
       aws_api_gateway_method.proxy_method,
       aws_api_gateway_method.proxy_options_method,
-    ]))
+    ])
   }
 
   depends_on = [

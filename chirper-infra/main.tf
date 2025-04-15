@@ -115,6 +115,16 @@ module "migration_lambda" {
   depends_on = [module.vpc, module.rds]
 }
 
+module "cloudfront" {
+  source = "./modules/cloudfront"
+
+  // TODO: Fix this by moving the bucket creation from /frontend to the modules here
+  bucket_domain_name = "marutsuki-chirper-bucket.s3.ap-southeast-2.amazonaws.com"
+  cdn_domain_names   = var.cdn_domain_names
+
+  depends_on = [aws_s3_bucket.deployment_bucket]
+}
+
 # Outputs
 output "api_gateway_url" {
   value       = module.api_gateway.api_gateway_url
